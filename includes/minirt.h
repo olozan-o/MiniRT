@@ -6,12 +6,16 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2020/01/14 13:26:44 by olozano-         ###   ########.fr       */
+/*   Updated: 2020/01/14 14:02:36 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#ifndef MINIRT_H
 
+# define	MINIRT_H
+
+# define	BUFFER_SIZE 128
+# include <stdlib.h>
 
 typedef	struct	objs
 {
@@ -42,4 +46,10 @@ typedef	struct 	scene
 }				rt_scene;
 
 char		*read_everything(int fd);
+rt_scene	*process_everything(char *all, rt_scene	*this_scene);
+
 size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
+char		*ft_strchr(const char *s, int c);
+int			ft_atoi(const char *nptr);
+
+#endif
