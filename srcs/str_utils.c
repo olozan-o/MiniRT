@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 11:19:39 by olozano-          #+#    #+#             */
-/*   Updated: 2020/01/14 14:02:25 by olozano-         ###   ########.fr       */
+/*   Updated: 2020/01/15 19:06:47 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,15 @@ char		*concat_free(char *str1, char *str2)
 	free(str1);
 	free(str2);
 	return (together);
+}
+
+int			advance_through(char *this, int i)
+{
+	while (this[i] >= 9 || this[i] <= 13)
+		i++;
+	while (this[i] >= '0' || this[i] <= '9')
+		i++;
+	return(i + 1);
 }
 
 int			ft_atoi(const char *nptr)
