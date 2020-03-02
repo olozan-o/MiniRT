@@ -6,13 +6,13 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 11:19:39 by olozano-          #+#    #+#             */
-/*   Updated: 2020/01/15 19:06:47 by olozano-         ###   ########.fr       */
+/*   Updated: 2020/03/02 16:34:12 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-size_t	ft_strlen(const char *s)
+size_t		ft_strlen(const char *s)
 {
 	size_t count;
 
@@ -60,38 +60,43 @@ char		*concat_free(char *str1, char *str2)
 	return (together);
 }
 
-int			advance_through(char *this, int i)
+int			advance_through(char *this)
 {
-	while (this[i] >= 9 || this[i] <= 13)
-		i++;
-	while (this[i] >= '0' || this[i] <= '9')
-		i++;
-	return(i + 1);
-}
-
-int			ft_atoi(const char *nptr)
-{
-	int				number;
-	int				i;
-	int				sign;
+	int	i;
 
 	i = 0;
-	if (!nptr)
-		return (0);
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
+	while (this[i] && (this[i] >= 9 || this[i] <= 13))
+		i++;
+	while (this[i] && (this[i] >= '0' || this[i] <= '9' || this[i] <= '.'))
+		i++;
+	return (i + (this[i] != '\0'));
+}
+
+double		ft_strtod(const char *str)
+{
+	double	number;
+	int		sign;
+	int		i;
+	int		aux;
+
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	sign = 1;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
+	if (str[i] == '-' || str[i] == '+')
+		if (str[i++] == '-')
 			sign = -1;
-		i++;
-	}
 	number = 0;
-	while (nptr[i] >= '0' && nptr[i] <= '9')
+	while (str[i] >= '0' && str[i] <= '9')
+		number = number * 10 + (str[i++] - '0');
+	if (str[i] != '.')
+		return ((double)number * sign);
+	aux = 10;
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		number = number * 10 + (nptr[i] - '0');
+		number = number + (double)(str[i] - '0') / aux;
+		aux = aux * 10;
 		i++;
 	}
-	return (number * sign);
+	return ((double)number * sign);
 }

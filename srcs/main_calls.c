@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:28:29 by olozano-          #+#    #+#             */
-/*   Updated: 2020/01/15 19:40:47 by olozano-         ###   ########.fr       */
+/*   Updated: 2020/03/02 16:39:42 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,13 @@ rt_scene	*make_a_scene(void)
 	new_scene->height = 0;
 	new_scene->width = 0;
 	new_scene->a_lum = -1;
-	new_scene->a_color[0] = 0;
-	new_scene->a_color[1] = 0;
-	new_scene->a_color[2] = 0;
+	new_scene->a_color = ft_calloc(3, sizeof(int));
 	new_scene->obj_list = NULL;
 	new_scene->light_list = NULL;
 	return (new_scene);
 }
 
-
-int main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	int			fd;
 	char		*file_str;
@@ -40,7 +37,7 @@ int main(int argc, char **argv)
 
 	if (argc < 2)
 		return (error_out(-1)); // ERROR TOO FEW ARGUMENTS == -1
-	fd = open(argv[1], argc);
+	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		return (error_out(1)); // ERROR OPENING == 1
 	if (!(file_str = read_everything(fd)))

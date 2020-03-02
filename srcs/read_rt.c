@@ -6,21 +6,21 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:24:03 by olozano-          #+#    #+#             */
-/*   Updated: 2020/01/15 19:44:42 by olozano-         ###   ########.fr       */
+/*   Updated: 2020/03/02 16:37:17 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-char	*read_everything(int fd)
+char		*read_everything(int fd)
 {
 	char	*resultat;
 	char	*buffer;
 	int		i_read;
-	
-	if (!(buffer = malloc (BUFFER_SIZE)))
+
+	if (!(buffer = malloc(BUFFER_SIZE)))
 		return (NULL);
-	if (!(resultat = malloc (BUFFER_SIZE)))
+	if (!(resultat = malloc(BUFFER_SIZE)))
 		return (NULL);
 	resultat[0] = '\0';
 	while ((i_read = read(fd, buffer, BUFFER_SIZE)))
@@ -32,7 +32,7 @@ char	*read_everything(int fd)
 	return (resultat);
 }
 
-int			process_element(rt_scene *sc, char *begin, int end)
+int			process_element(rt_scene *sc, char *begin)
 {
 	if (begin[0] == 'R')
 	{
@@ -40,8 +40,8 @@ int			process_element(rt_scene *sc, char *begin, int end)
 			sc->width = -444;
 		else
 		{
-			sc->width = ft_atoi(begin + 1);
-			sc->height = ft_atoi(begin + advance_through(begin, 1));
+			sc->width = (int)ft_strtod(begin + 1);
+			sc->height = (int)ft_strtod(begin + advance_through(begin));
 		}
 	}
 	if (begin[0] == 'A')
@@ -49,42 +49,29 @@ int			process_element(rt_scene *sc, char *begin, int end)
 		if (sc->a_lum >= 0)
 			return ((sc->a_lum = -444));
 		else
-			return (process_ambiance(sc, begin, end));
+			return (process_ambiance(sc, begin));
 	}
 	if (begin[0] == 'c')
-		return (process_camera(sc, begin, end));
+		return (process_camera(sc, begin));
 	if (begin[0] == 'l')
-		return (process_light(sc, begin, end));
-	return (process_object(sc, begin, end));
+		return (process_light(sc, begin));
+	return (process_object(sc, begin));
 }
 
-int			*process_everything(char *all, rt_scene	*this_scene)
+int			*process_everything(char *all, rt_scene *this_scene)
 {
 	int		i;
-	int		inside;
+	char	**all_elements;
 
-	//SPLIT PAR LIGNES VIDES !!! "\n\n"
+	all_elements = ft_split(all, '\n');
 	i = 0;
-	inside = 1;
-	while (all[i + 1])
+	while (all_elements[i])
 	{
-		if (all[i] == '\n' && all[i + 1] == '\n')
-		{
-			if (inside)
-			{
-				// correctly formatted element ?
-				if (!process_element(this_scene, all + inside, i - inside + 1))
-					return(40);
-				inside = 0;
-			}
-		}
-		else if (all[i] != '\n' && !inside)
-			inside = i;
+		if (all_elements[i][0])
+			if (process_element(this_scene, all_elements[i]) < 0)
+				return (40); // ERROR > element not formatted correctly
 		i++;
 	}
 	return (check_everything(this_scene));
 	// negative values in this_scene mean doubles where there souldn't be
 }
-
-
-
