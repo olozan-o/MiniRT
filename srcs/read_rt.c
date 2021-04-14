@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_rt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:24:03 by olozano-          #+#    #+#             */
-/*   Updated: 2020/03/02 16:37:17 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/04/13 13:17:17 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ char		*read_everything(int fd)
 	resultat[0] = '\0';
 	while ((i_read = read(fd, buffer, BUFFER_SIZE)))
 	{
-		resultat = together(resultat, buffer);
+		resultat = concat_here(resultat, buffer, i_read);
 	}
+	free(buffer);
 	if (i_read < 0)
-		return (error_out(2)); // ERROR READING = 2
+		return (NULL); // ERROR READING = 2
 	return (resultat);
 }
 
@@ -41,8 +42,9 @@ int			process_element(rt_scene *sc, char *begin)
 		else
 		{
 			sc->width = (int)ft_strtod(begin + 1);
-			sc->height = (int)ft_strtod(begin + advance_through(begin));
+			sc->height = (int)ft_strtod(advance_through(begin + 1));
 		}
+		return (0);
 	}
 	if (begin[0] == 'A')
 	{
@@ -51,27 +53,28 @@ int			process_element(rt_scene *sc, char *begin)
 		else
 			return (process_ambiance(sc, begin));
 	}
-	if (begin[0] == 'c')
+	if (begin[0] == 'c' && begin[1] != 'y')
 		return (process_camera(sc, begin));
 	if (begin[0] == 'l')
 		return (process_light(sc, begin));
 	return (process_object(sc, begin));
 }
 
-int			*process_everything(char *all, rt_scene *this_scene)
+int			process_everything(char *all, rt_scene *this_scene)
 {
 	int		i;
 	char	**all_elements;
 
-	all_elements = ft_split(all, '\n');
+	all_elements = ft_split(all, '\n'); // IL FAUDRAIT PAS CHANGER POUR QUE CE SOIT UN SPLIT À PARTIR DE \n\n ??
 	i = 0;
 	while (all_elements[i])
 	{
+		write(1, "\n", 1); ft_putstr_fd(all_elements[i], 1);
 		if (all_elements[i][0])
 			if (process_element(this_scene, all_elements[i]) < 0)
 				return (40); // ERROR > element not formatted correctly
 		i++;
 	}
-	return (check_everything(this_scene));
+	return (0);
 	// negative values in this_scene mean doubles where there souldn't be
 }

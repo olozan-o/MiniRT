@@ -1,6 +1,6 @@
-SRCS	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c
+SRCS	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c
 
-SRCS_B	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c
+SRCS_B	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c
 
 OBJS	= ${SRCS:.c=.o}
 

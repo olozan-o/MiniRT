@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2020/03/02 16:56:26 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/04/12 23:18:43 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 # define	BUFFER_SIZE 128
 # include <stdlib.h>
+# include <unistd.h>
 
 typedef	struct	objs
 {
@@ -40,19 +41,33 @@ typedef	struct 	scene
 
 /*			CARCASSE FUNCTIONS		*/
 char		*read_everything(int fd);
-int			*process_everything(char *all, rt_scene	*this_scene);
+int			process_everything(char *all, rt_scene	*this_scene);
+
+/*			PARSING FUNCTIONS		*/
+int			process_ambiance(rt_scene *sc, char *begin);
+int			process_camera(rt_scene *sc, char *begin);
+int			process_light(rt_scene *sc, char *begin);
+int			process_object(rt_scene *sc, char *begin);
+
 
 /*		INTERNAL STRUCT FUNCTIONS	*/
 int			get_some_d(double	*things, int how_many, char	*where_from);
 rt_objs		*push_new_object(rt_objs **begin_list);
 int			object_error(char c);
 
+/*		  ERROR AND DEBUGGING		*/
+int			error_out(int code);
+int			check_all(rt_scene *sc);
+
 /*			STR FUNCTIONS			*/
 char		**ft_split(char const *s, char c);
 size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
 char		*ft_strchr(const char *s, int c);
-int			advance_through(char *this);
+char		*advance_through(char *this);
 double		ft_strtod(const char *str);
 void		*ft_calloc(size_t nmemb, size_t size);
+char		*concat_here(char *str1, char *str2, int read);
+void		ft_putstr_fd(char *s, int fd);
+
 
 #endif

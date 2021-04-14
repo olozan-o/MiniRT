@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   str_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 11:19:39 by olozano-          #+#    #+#             */
-/*   Updated: 2020/03/02 16:34:12 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/04/13 11:22:17 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char		*ft_strchr(const char *s, int c)
 	return (ret);
 }
 
-char		*concat_free(char *str1, char *str2)
+char		*concat_here(char *str1, char *str2, int read)
 {
 	int		size1;
 	int		size2;
@@ -47,29 +47,32 @@ char		*concat_free(char *str1, char *str2)
 
 	size1 = ft_strlen(str1);
 	size2 = ft_strlen(str2);
+	if (read < size2)
+		size2 = read;
 	if (!(together = malloc(size1 + size2 + 1)))
 		return (NULL);
-	i = 0;
-	while (i < size1)
-		together[i] = str1[i++];
-	while (i < size1 + size2)
-		together[i] = str2[i++ - size1];
+	i = -1;
+	while (++i < size1)
+		together[i] = str1[i];
+	i--;
+	while (++i < size1 + size2)
+		together[i] = str2[i - size1];
 	together[i] = '\0';
 	free(str1);
-	free(str2);
+	//free(str2);
 	return (together);
 }
 
-int			advance_through(char *this)
+char		*advance_through(char *this)
 {
 	int	i;
 
 	i = 0;
-	while (this[i] && (this[i] >= 9 || this[i] <= 13))
+	while (this[i] && ((this[i] >= 9 && this[i] <= 13) || this[i]==32))
 		i++;
-	while (this[i] && (this[i] >= '0' || this[i] <= '9' || this[i] <= '.'))
+	while (this[i] && ((this[i] >= '0' && this[i] <= '9') || this[i] == '.' || this[i] == '-'))
 		i++;
-	return (i + (this[i] != '\0'));
+	return (this + i + (this[i] == ','));
 }
 
 double		ft_strtod(const char *str)
@@ -92,11 +95,20 @@ double		ft_strtod(const char *str)
 	if (str[i] != '.')
 		return ((double)number * sign);
 	aux = 10;
-	while (str[i] >= '0' && str[i] <= '9')
+	while (str[++i] >= '0' && str[i] <= '9')
 	{
 		number = number + (double)(str[i] - '0') / aux;
 		aux = aux * 10;
-		i++;
 	}
 	return ((double)number * sign);
+}
+
+void		ft_putstr_fd(char *s, int fd)
+{
+	int	size;
+
+	size = 0;
+	while (*(s + size))
+		size++;
+	write(fd, s, size);
 }
