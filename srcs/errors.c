@@ -12,6 +12,12 @@
 
 #include "minirt.h"
 
+int		exit_program(void)
+{
+	exit(0);
+	return (0);
+}
+
 int		object_error(char c)
 {
 /*	Sphere:-43		Plane:-44		Square:-45	*/

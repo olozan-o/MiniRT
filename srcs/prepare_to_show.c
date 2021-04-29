@@ -13,6 +13,16 @@
 #include "minirt.h"
 #include <stdio.h>
 
+int		put_it_on(rt_scene *scene_now, mlx_show *the_show)
+{
+	if (!scene_now)
+		return (-1060);
+	if (!the_show)
+		return (-1061);
+	printf ("\n* * * * * I WOULD BE PUTTING OUT AMAZING THINGS RIGHT NOW * * * * * *\n\n");
+	return(0);
+}
+
 int		check_all(rt_scene *sc)
 {
 	rt_objs		*iterator;
