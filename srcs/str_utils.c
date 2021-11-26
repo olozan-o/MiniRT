@@ -129,4 +129,8 @@ int		ft_strcmp(const char *s1, const char *s2)
 		return (-1);
 	else
 		return (0);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1

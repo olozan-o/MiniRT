@@ -14,13 +14,22 @@ CC		= gcc
 
 INCLS	= includes
 
+LIBMLX 	= libmlx.dylib \
+		libmlx.a
+
 CFLAGS	= -Wall -Wextra -Werror
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o} -I${INCLS}
+			@echo "Compiled "$<" successfully!"
 
 ${NAME}:	${OBJS}
-			${CC} -I${INCLS} ${CFLAGS} -o ${NAME} ${OBJS}
+			@make -C ./minilibx_mms
+			@make -C ./minilibx_opengl
+			@cp ./minilibx_mms/libmlx.dylib libmlx.dylib
+			@cp ./minilibx_opengl/libmlx.a libmlx.a
+			${CC} -I${INCLS} ${CFLAGS} $(LIBMLX) -o ${NAME} ${OBJS} 
+		
 
 all:		${NAME}
 
