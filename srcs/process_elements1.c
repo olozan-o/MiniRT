@@ -63,6 +63,7 @@ int		process_light(rt_scene *sc, char *begin)
 	int		i;
 	rt_objs	*this_obj;
 
+
 	if (!(this_obj = push_new_object(&(sc->light_list))))
 		return (0);
 	this_obj->type = 'L';

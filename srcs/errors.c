@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 16:51:39 by olozano-          #+#    #+#             */
-/*   Updated: 2021/04/12 23:04:14 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/05/05 19:59:15 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+int		exit_program(void)
+{
+	exit(0);
+	return (0);
+}
 
 int		object_error(char c)
 {

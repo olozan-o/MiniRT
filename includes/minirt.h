@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/04/12 23:18:43 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/05/12 10:51:57 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,32 @@
 # define	BUFFER_SIZE 128
 # include <stdlib.h>
 # include <unistd.h>
+# include <mlx.h>
+# include <math.h>
 
-typedef	struct	objs
+typedef struct s_show
 {
-		char	type;
-		double	*coord;
-		double	*orient;
-		double	*params;
-		double	*color;
-		struct objs	*next;
-}				rt_objs;
+		void		*mlx_ptr;
+		void		*win_ptr;
+		void		*mlx_img;
+		char		*data;
+		int			bpp;
+		int			size_line;
+		int			endian;
 
-typedef	struct 	scene
+}				t_mlx_show;
+
+typedef	struct s_objs
+{
+		char		type;
+		double		*coord;
+		double		*orient;
+		double		*params;
+		double		*color;
+		struct objs	*next;
+}					rt_objs;
+
+typedef	struct 		scene
 {
 		int			height;
 		int			width;
@@ -37,37 +51,51 @@ typedef	struct 	scene
 		rt_objs		*obj_list; // to be rechecked :: single or double pointers ??
 		rt_objs		*camera_list; // to be rechecked :: single or double pointers ??
 		rt_objs		*light_list;
-}				rt_scene;
+}					rt_scene;
 
-/*			CARCASSE FUNCTIONS		*/
-char		*read_everything(int fd);
-int			process_everything(char *all, rt_scene	*this_scene);
+static double	*g_up_vector;
+static double	**g_rot_m;
 
-/*			PARSING FUNCTIONS		*/
-int			process_ambiance(rt_scene *sc, char *begin);
-int			process_camera(rt_scene *sc, char *begin);
-int			process_light(rt_scene *sc, char *begin);
-int			process_object(rt_scene *sc, char *begin);
+/*			PARSING FUNCTIONS			*/
+char			*read_everything(int fd);
+int				process_everything(char *all, rt_scene	*this_scene);
+int				process_ambiance(rt_scene *sc, char *begin);
+int				process_camera(rt_scene *sc, char *begin);
+int				process_light(rt_scene *sc, char *begin);
+int				process_object(rt_scene *sc, char *begin);
 
+/*			INTERNAL STRUCT FUNCTIONS	*/
+int				get_some_d(double	*things, int how_many, char	*where_from);
+rt_objs			*push_new_object(rt_objs **begin_list);
+int				object_error(char c);
 
-/*		INTERNAL STRUCT FUNCTIONS	*/
-int			get_some_d(double	*things, int how_many, char	*where_from);
-rt_objs		*push_new_object(rt_objs **begin_list);
-int			object_error(char c);
+/*		  	ERROR AND DEBUGGING			*/
+int				error_out(int code);
+int				check_all(rt_scene *sc);
+int				exit_program(void);
 
-/*		  ERROR AND DEBUGGING		*/
-int			error_out(int code);
-int			check_all(rt_scene *sc);
+/*			STR FUNCTIONS				*/
+char			**ft_split(char const *s, char c);
+size_t			ft_strlcat(char *dst, const char *src, size_t dstsize);
+char			*ft_strchr(const char *s, int c);
+char			*advance_through(char *this);
+double			ft_strtod(const char *str);
+void			*ft_calloc(size_t nmemb, size_t size);
+char			*concat_here(char *str1, char *str2, int read);
+void			ft_putstr_fd(char *s, int fd);
+int				ft_strcmp(const char *s1, const char *s2);
 
-/*			STR FUNCTIONS			*/
-char		**ft_split(char const *s, char c);
-size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
-char		*ft_strchr(const char *s, int c);
-char		*advance_through(char *this);
-double		ft_strtod(const char *str);
-void		*ft_calloc(size_t nmemb, size_t size);
-char		*concat_here(char *str1, char *str2, int read);
-void		ft_putstr_fd(char *s, int fd);
+/*			MATH FUNCTIONS				*/
+double     		*cross_product(double *one, double *other);
+double     		*scalar_product(double *one, double *other);
+double			single_product(double *one, double *other);
+double      	*substract(double *one, double *other);
+double      	*normalize(double *these3);
+void      		compute_rotation(double *orig, double *dir);
+double      	*world_to_cam(double *vec);
+
+/*			IMAGE FUNCTIONS				*/
+int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
 
 
 #endif
