@@ -6,14 +6,15 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 16:51:39 by olozano-          #+#    #+#             */
-/*   Updated: 2021/05/05 19:59:15 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/26 23:40:50 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int		exit_program(void)
+int		exit_program(char *str)
 {
+	ft_putstr_fd(str, 2);
 	exit(0);
 	return (0);
 }

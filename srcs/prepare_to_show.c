@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_to_show.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/26 13:04:57 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/11/26 23:47:03 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int		fill_the_image(rt_scene *scene_now, t_mlx_show *the_show)
 	double	fov;
 	int		aux;
 
-	compute_rotation(scene_now->camera_list->coord, scene_now->camera_list->orient);
+	compute_rotation(scene_now->camera->coord, scene_now->camera->orient);
 	ray_i = ft_calloc(3, sizeof(double));
 	x_i = -1;
 	y_i = -1;
-	fov = scene_now->camera_list->params[0];
+	fov = scene_now->camera->params[0];
 	while (++x_i < scene_now->width)
 		while (++y_i < scene_now->height)
 		{
@@ -74,16 +74,14 @@ int		check_all(rt_scene *sc)
 		sc->width, sc->height);
 
 	printf("\nCAMERAS:\n");
-	iterator = sc->camera_list;
+	iterator = sc->camera;
 	while (iterator)
 	{
 		printf("position--: %f, %f, %f\n", iterator->coord[0], iterator->coord[1],
 				iterator->coord[2]);
 		printf("--orientation--: %f, %f, %f\n", iterator->orient[0], 
 				iterator->orient[1], iterator->orient[2]);
-		write(1, "right before the aperture\n", 27);
 		printf("--aperture?--%f\n", iterator->params[0]);
-		write(1, "right before to the lights\n", 28);
 		iterator = iterator->next;
 	}
 	write(1, "getting to the lights\n", 23);
@@ -91,7 +89,7 @@ int		check_all(rt_scene *sc)
 		sc->a_lum, sc->a_color[0], sc->a_color[1], sc->a_color[2]);
 
 	printf("\nLIGHTS:\n");
-	iterator = sc->light_list;
+	iterator = sc->f_light;
 	while (iterator)
 	{
 		printf("position--: %f, %f, %f\n", iterator->coord[0], iterator->coord[1],

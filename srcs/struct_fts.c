@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 15:38:00 by olozano-          #+#    #+#             */
-/*   Updated: 2021/05/05 19:59:29 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 00:00:57 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ rt_objs		*push_new_object(rt_objs **begin_list)
 	return (new_one);
 }
 
-#include <stdio.h>
-
-int			get_some_d(double *things, int how_many, char *where_from)
+char	*get_some_d(double *things, int how_many, char *where_from)
 {
 	int	i;
 	char	*str_backup;
@@ -42,11 +40,9 @@ int			get_some_d(double *things, int how_many, char *where_from)
 		where_from = advance_through(where_from);
 		i++;
 	}
-	if (*where_from == ' ' || *where_from == '\n' || *where_from == '\0')
+	if (ft_isspace(*where_from) || *where_from == '\n' || *where_from == '\0')
 	{
-		return ((int) (where_from - str_backup));
+		return (where_from);
 	}
-	else
-		return (0);
-	return(0);
+	return (NULL);
 }

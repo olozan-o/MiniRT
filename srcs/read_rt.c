@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:24:03 by olozano-          #+#    #+#             */
-/*   Updated: 2021/05/05 19:59:36 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/26 23:35:36 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,6 @@ char		*read_everything(int fd)
 
 int			process_element(rt_scene *sc, char *begin)
 {
-	if (begin[0] == 'R')
-	{
-		if (sc->width > 0)
-			sc->width = -444;
-		else
-		{
-			sc->width = (int)ft_strtod(begin + 1);
-			sc->height = (int)ft_strtod(advance_through(begin + 1));
-		}
-		return (0);
-	}
 	if (begin[0] == 'A')
 	{
 		if (sc->a_lum >= 0)
@@ -53,9 +42,9 @@ int			process_element(rt_scene *sc, char *begin)
 		else
 			return (process_ambiance(sc, begin));
 	}
-	if (begin[0] == 'c' && begin[1] != 'y')
+	if (begin[0] == 'C')
 		return (process_camera(sc, begin));
-	if (begin[0] == 'l')
+	if (begin[0] == 'L')
 		return (process_light(sc, begin));
 	return (process_object(sc, begin));
 }
@@ -67,9 +56,11 @@ int			process_everything(char *all, rt_scene *this_scene)
 
 	all_elements = ft_split(all, '\n'); // IL FAUDRAIT PAS CHANGER POUR QUE CE SOIT UN SPLIT À PARTIR DE \n\n ??
 	i = 0;
+	this_scene->width = WIDTH;
+	this_scene->height = HEIGHT;
 	while (all_elements[i])
 	{
-		write(1, "\n", 1); ft_putstr_fd(all_elements[i], 1);
+		printf("%s\n", all_elements[i]);
 		if (all_elements[i][0])
 			if (process_element(this_scene, all_elements[i]) < 0)
 				return (40); // ERROR > element not formatted correctly

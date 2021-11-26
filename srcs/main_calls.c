@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_calls.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:28:29 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 13:05:00 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/11/26 23:42:46 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ rt_scene	*make_a_scene(void)
 	new_scene->a_lum = -1;
 	new_scene->a_color = ft_calloc(3, sizeof(int));
 	new_scene->obj_list = NULL;
-	new_scene->camera_list = NULL;
+	new_scene->camera = NULL;
 	g_up_vector = ft_calloc(3, sizeof(double));
 	g_up_vector[0] = 0;
 	g_up_vector[0] = 1;
@@ -55,11 +55,9 @@ void	start_the_dance(t_mlx_show *the_show)
 	mlx_put_image_to_window(the_show->mlx_ptr, the_show->win_ptr,
 the_show->mlx_img, 0, 0);
 	//mlx_hook(the_show->win_ptr, 2, 1L << 0, handle_key, the_show);
-	mlx_hook(the_show->win_ptr, 17, 1L << 17, exit_program, 0);
+	mlx_hook(the_show->win_ptr, 17, 1L << 17, exit_program, "WINDOW ERROR\n");
 	mlx_loop(the_show->mlx_ptr);
 }
-
-#include <stdio.h>
 
 int			main(int argc, char **argv)
 {

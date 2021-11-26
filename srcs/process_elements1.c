@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   process_elements1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:29:11 by olozano-          #+#    #+#             */
-/*   Updated: 2021/04/13 13:18:25 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/11/27 00:06:11 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-#include <stdio.h>
 
 int		process_ambiance(rt_scene *sc, char *begin)
 {
@@ -36,19 +35,25 @@ int		process_ambiance(rt_scene *sc, char *begin)
 
 int		process_camera(rt_scene *sc, char *begin)
 {
-	int		i;
+	char	*it;
 	rt_objs	*this_obj;
 
-	if (!(this_obj = push_new_object(&(sc->camera_list))))
-		return (0);
+	if (sc->camera)
+		exit_program("ERROR: Multiple cameras in sight\n");
+	if (!(sc->camera = push_new_object(&(sc->camera))))
+		return (-11);
+	this_obj = sc->camera;
 	this_obj->type = 'C';
-	i = 1;
-	if (!(i = i + get_some_d(this_obj->coord, 3, begin + i)))
+	it = get_some_d(this_obj->coord, 3, begin + 1);
+	if (!it)
 		return (-41); // ERORR wrong CAMERA information formating
-	if (!(i = i + get_some_d(this_obj->orient, 3, begin + i)))
+	it = get_some_d(this_obj->orient, 3, it);
+	if (!it)
 		return (-41);
-	if (!(i = i + get_some_d(this_obj->params, 1, begin + i)))
+	it = get_some_d(this_obj->params, 1, it);
+	if (!it)
 		return (-41);
+	printf("FINISHED ELEMENT\n\n");
 
 	if (this_obj->orient[0] > 1 || this_obj->orient[0] < -1
 		|| this_obj->orient[1] > 1 || this_obj->orient[1] < -1
@@ -60,20 +65,22 @@ int		process_camera(rt_scene *sc, char *begin)
 
 int		process_light(rt_scene *sc, char *begin)
 {
-	int		i;
+	char	*it;
 	rt_objs	*this_obj;
+	int		aux;
 
-
-	if (!(this_obj = push_new_object(&(sc->light_list))))
+	if (!(this_obj = push_new_object(&(sc->f_light))))
 		return (0);
 	this_obj->type = 'L';
-	i = 1;
-	if (!(i = i + get_some_d(this_obj->coord, 3, begin + i)))
-		return (-42); // ERORR wrong LIGHT information formating
-	if (!(i = i + get_some_d(this_obj->params, 1, begin + i)))
-		return (-42);
-	if (!(i = i + get_some_d(this_obj->color, 3, begin + i)))
-		return (-42);
+	it = get_some_d(this_obj->coord, 3, begin + 1);
+	if (!it)
+		return (-41); // ERORR wrong LIGHT information formating
+	it = get_some_d(this_obj->params, 1, it);
+	if (!it)
+		return (-41);
+	it = get_some_d(this_obj->color, 3, it);
+	if (!it)
+		return (-41);
 	if (this_obj->orient[0] > 255 || this_obj->orient[0] < 0
 		|| this_obj->orient[1] > 255 || this_obj->orient[1] < 0
 		|| this_obj->orient[2] > 255 || this_obj->orient[2] < 0
@@ -84,37 +91,32 @@ int		process_light(rt_scene *sc, char *begin)
 
 int		process_object(rt_scene *sc, char *begin)
 {
-	int		i;
+	char	*it;
 	rt_objs	*ob;
+	int		aux;
 
+	if ((ft_strncmp(begin, "sp", 2) && ft_strncmp(begin, "pl", 2)
+		&& ft_strncmp(begin, "cy", 2)) || !ft_isspace(begin[2]))
+	{
+		printf("ERROR: unknown element: %d %d %d %d\n", ft_strncmp(begin, "sp", 2), ft_strncmp(begin, "pl", 2), ft_strncmp(begin, "cy", 2), ft_isspace(begin[1]));
+		return(-4);
+	}
 	if (!(ob = push_new_object(&(sc->obj_list))))
-		return (0);
-	i = 1;
-
-	if (begin[0] == 's' && begin[1] == 'q')
-		ob->type = 'q';
-	else
-		ob->type = begin[0];
-	
-	if (*(begin + i) >= 'a'  && *(begin + i) <= 'z' )
-		i++;
-	if (!(i = i + get_some_d(ob->coord, 3, begin + i)))
-		return (object_error(ob->type));
-	if (ob->type == 'p' || ob->type == 'q' || ob->type == 'c' || ob->type == 't')
-		if (!(i = i + get_some_d(ob->orient, 3, begin + i)))
-			return (object_error(ob->type));
-	if (ob->type == 's' || ob->type == 'q' || ob->type == 'c')
-		if (!(i = i + get_some_d(ob->params, 1, begin + i)))
-			return (object_error(ob->type));
-	if (ob->type == 'c')
-		if (!(i = i + get_some_d(ob->params + 1, 1, begin + i)))
-			return (object_error(ob->type));
-	if (ob->type == 't')
-		if (!(i = i + get_some_d(ob->params, 3, begin + i)))
-			return (object_error(ob->type));
-	/* COLOR */
-	if (!(i = i + get_some_d(ob->color, 3, begin + i)))
-			return (object_error(ob->type));
-	
+		return (-11);
+	it = get_some_d(ob->coord, 3, begin + 2);
+	if (!it)
+		return(-41);
+	if (!ft_strncmp(begin, "pl", 2) || !ft_strncmp(begin, "cy", 2))
+	{
+		it = get_some_d(ob->orient, 3, it);
+		if (!it)
+			return(-41);
+	}
+	if (!ft_strncmp(begin, "cy", 2))
+	{
+		it = get_some_d(ob->params, 2, it);
+		if (!it)
+			return(-41);
+	}
 	return(1);
 }

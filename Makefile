@@ -1,48 +1,47 @@
-SRCS	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c srcs/math_calculs.c
+NAME	=	miniRT
 
-OBJS	= ${SRCS:.c=.o}
+SRCS	= 	srcs/main_calls.c \
+			srcs/read_rt.c \
+			srcs/errors.c \
+			srcs/ft_calloc.c \
+			srcs/str_utils.c \
+			srcs/ft_split.c \
+			srcs/prepare_to_show.c \
+			srcs/struct_fts.c \
+			srcs/process_elements1.c \
+			srcs/math_calculs.c \
 
+detected_OS := $(shell uname)
 
-NAME	= bsq
+OBJS_S=		$(SRCS:%.c=%.o)
 
-RM		= rm -f
+CC=gcc
 
-CC		= gcc
+INCL=		-I includes/
 
-INCLS	= includes
+ifeq ($(detected_OS),Darwin)        # Mac OS X
+    CFLAGS=  -I lib42/includes/ -I ./mlx/    \ 
+-L ./mlx/ -lmlx -framework OpenGL -framework AppKit -lm #-g3 -fsanitize=address -Wall -Wextra -Werror
+endif
+ifeq ($(detected_OS),Linux)
+    CFLAGS=  -I lib42/includes/ -I ./mlx/    \
+-L ./mlx/ -lmlx -lXext -lX11 -lm #-g3 -fsanitize=address -Wall -Wextra -Werror
+endif
 
-LIBMLX 	= libmlx.dylib \
-		libmlx.a
+all: $(NAME)
 
-CFLAGS	= -Wall -Wextra -Werror
+lib:
+	$(MAKE) -C mlx
 
-.c.o:
-			${CC} ${CFLAGS} -c $< -o ${<:.c=.o} -I${INCLS}
-			@echo "Compiled "$<" successfully!"
+$(NAME): lib
+	$(CC) $(SRCS) -o $(NAME) $(CFLAGS) $(INCL)
 
-${NAME}:	${OBJS}
-			@make -C ./minilibx_mms
-			@make -C ./minilibx_opengl
-			@cp ./minilibx_mms/libmlx.dylib libmlx.dylib
-			@cp ./minilibx_opengl/libmlx.a libmlx.a
-			${CC} -I${INCLS} ${CFLAGS} $(LIBMLX) -o ${NAME} ${OBJS} 
-		
 clean:
-			${RM} ${OBJS}
+	rm -f $(OBJS_S)
+	rm -f $(OBJS_BNS)
+	$(MAKE) clean -C mlx
 
-all:		${NAME}
-			${RM} ${OBJS}
+fclean: clean
+	rm -f $(NAME)
 
-fclean:		clean
-			${RM} ${NAME}
-
-fmlxclean:	fclean
-			${RM} libmlx.a
-			${RM} libmlx.dylib
-
-re:			fclean all
-
-bonus:		${OBJS_B}
-			${CC} -I${INCLS} ${CFLAGS} -o ${NAME} ${OBJS_B}
-
-.PHONY:		all clean fclean re
+re: fclean all

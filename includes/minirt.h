@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 13:04:56 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/11/26 23:58:43 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,45 +15,47 @@
 # define	MINIRT_H
 
 # define	BUFFER_SIZE 128
+# define	WIDTH 1080
+# define	HEIGHT 720
 # include <stdlib.h>
 # include <unistd.h>
-# include <mlx.h>
+# include <stdio.h>
+# include "mlx.h"
 # include <math.h>
 
 typedef struct s_show
 {
-		void		*mlx_ptr;
-		void		*win_ptr;
-		void		*mlx_img;
-		char		*data;
-		int			bpp;
-		int			size_line;
-		int			endian;
-
-}				t_mlx_show;
+	void			*mlx_ptr;
+	void			*win_ptr;
+	void			*mlx_img;
+	char			*data;
+	int				bpp;
+	int				size_line;
+	int				endian;
+}					t_mlx_show;
 
 typedef	struct s_objs
 {
-		char		type;
-		double		*coord;
-		double		*orient;
-		double		*params;
-		double		*color;
-		struct objs	*next;
+	char			type;
+	double			*coord;
+	double			*orient;
+	double			*params;
+	double			*color;
+	struct s_objs	*next;
 }					rt_objs;
 
 typedef	struct 		scene
 {
-		int			height;
-		int			width;
-		double		a_lum;
-		int			*a_color;
-		rt_objs		*obj_list; // to be rechecked :: single or double pointers ??
-		rt_objs		*camera_list; // to be rechecked :: single or double pointers ??
-		rt_objs		*light_list;
+	int				height;
+	int				width;
+	double			a_lum;
+	int				*a_color;
+	rt_objs			*obj_list; // to be rechecked :: single or double pointers ??
+	rt_objs			*camera; // to be rechecked :: single or double pointers ??
+	rt_objs			*f_light;
 }					rt_scene;
 
-static double	*g_up_vector;
+static double	*g_up_vector = NULL;
 static double	**g_rot_m;
 
 /*			PARSING FUNCTIONS			*/
@@ -65,14 +67,14 @@ int				process_light(rt_scene *sc, char *begin);
 int				process_object(rt_scene *sc, char *begin);
 
 /*			INTERNAL STRUCT FUNCTIONS	*/
-int				get_some_d(double	*things, int how_many, char	*where_from);
+char			*get_some_d(double *things, int how_many, char *where_from);
 rt_objs			*push_new_object(rt_objs **begin_list);
 int				object_error(char c);
 
 /*		  	ERROR AND DEBUGGING			*/
 int				error_out(int code);
 int				check_all(rt_scene *sc);
-int				exit_program(void);
+int				exit_program(char *str);
 
 /*			STR FUNCTIONS				*/
 char			**ft_split(char const *s, char c);
@@ -84,6 +86,8 @@ void			*ft_calloc(size_t nmemb, size_t size);
 char			*concat_here(char *str1, char *str2, int read);
 void			ft_putstr_fd(char *s, int fd);
 int				ft_strcmp(const char *s1, const char *s2);
+int				ft_isspace(char c);
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*			MATH FUNCTIONS				*/
 double     		*cross_product(double *one, double *other);
@@ -92,7 +96,7 @@ double			single_product(double *one, double *other);
 double      	*substract(double *one, double *other);
 double      	*normalize(double *these3);
 void      		compute_rotation(double *orig, double *dir);
-double      	*world_to_cam(double *vec);
+void      		*world_to_cam(double *vec);
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
