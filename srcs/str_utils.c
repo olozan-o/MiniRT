@@ -6,7 +6,7 @@
 /*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 11:19:39 by olozano-          #+#    #+#             */
-/*   Updated: 2021/04/13 11:22:17 by oscarlo          ###   ########.fr       */
+/*   Updated: 2021/11/26 13:04:55 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,4 @@ int		ft_strcmp(const char *s1, const char *s2)
 		return (-1);
 	else
 		return (0);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1

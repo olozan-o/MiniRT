@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/05/12 10:51:57 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:04:56 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <mlx.h>
-<<<<<<< HEAD
 # include <math.h>
-=======
-
-typedef struct	show
-{
-		void	*mlx_ptr;
-		void	*win_ptr;
-		void	*mlx_img;
-		char	*data;
-		int		bpp;
-		int		size_line;
-		int		endian;
-
-}				mlx_show;
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 
 typedef struct s_show
 {
@@ -66,7 +51,6 @@ typedef	struct 		scene
 		rt_objs		*obj_list; // to be rechecked :: single or double pointers ??
 		rt_objs		*camera_list; // to be rechecked :: single or double pointers ??
 		rt_objs		*light_list;
-<<<<<<< HEAD
 }					rt_scene;
 
 static double	*g_up_vector;
@@ -112,42 +96,6 @@ double      	*world_to_cam(double *vec);
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
-=======
-}				rt_scene;
-
-/*			PARSING FUNCTIONS			*/
-char		*read_everything(int fd);
-int			process_everything(char *all, rt_scene	*this_scene);
-int			process_ambiance(rt_scene *sc, char *begin);
-int			process_camera(rt_scene *sc, char *begin);
-int			process_light(rt_scene *sc, char *begin);
-int			process_object(rt_scene *sc, char *begin);
-
-/*			INTERNAL STRUCT FUNCTIONS	*/
-int			get_some_d(double	*things, int how_many, char	*where_from);
-rt_objs		*push_new_object(rt_objs **begin_list);
-int			object_error(char c);
-
-/*		  	ERROR AND DEBUGGING			*/
-int			error_out(int code);
-int			check_all(rt_scene *sc);
-int			exit_program(void);
-
-/*			STR FUNCTIONS				*/
-char		**ft_split(char const *s, char c);
-size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
-char		*ft_strchr(const char *s, int c);
-char		*advance_through(char *this);
-double		ft_strtod(const char *str);
-void		*ft_calloc(size_t nmemb, size_t size);
-char		*concat_here(char *str1, char *str2, int read);
-void		ft_putstr_fd(char *s, int fd);
-int			ft_strcmp(const char *s1, const char *s2);
-
-
-/*			IMAGE FUNCTIONS				*/
-int			put_it_on(rt_scene *scene_now, mlx_show *the_show);
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 
 
 #endif

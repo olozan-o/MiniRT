@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_calls.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:28:29 by olozano-          #+#    #+#             */
-/*   Updated: 2021/05/12 11:09:59 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:05:00 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,11 @@ rt_scene	*make_a_scene(void)
 	return (new_scene);
 }
 
-<<<<<<< HEAD
 t_mlx_show	*rideau(rt_scene *scene)
 {
 	t_mlx_show		*the_show;
 
 	if (!(the_show = malloc(sizeof(t_mlx_show))))
-=======
-mlx_show	*rideau(rt_scene *scene)
-{
-	mlx_show		*the_show;
-
-	if (!(the_show = malloc(sizeof(mlx_show))))
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 		return (NULL);
 	the_show->mlx_ptr = mlx_init();
 	the_show->mlx_img = mlx_new_image(the_show->mlx_ptr, scene->width, scene->height);
@@ -53,18 +45,11 @@ mlx_show	*rideau(rt_scene *scene)
 		&the_show->bpp, &the_show->size_line, &the_show->endian);
 	the_show->win_ptr = mlx_new_window(the_show->mlx_ptr, scene->width, scene->height, 
 		"miniRT");
-<<<<<<< HEAD
 	the_show->bpp = 600;
 	return (the_show);
 }
 
 void	start_the_dance(t_mlx_show *the_show)
-=======
-	return (the_show);
-}
-
-void	start_the_dance(mlx_show *the_show)
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 {
 	mlx_clear_window(the_show->mlx_ptr, the_show->win_ptr);
 	mlx_put_image_to_window(the_show->mlx_ptr, the_show->win_ptr,
@@ -81,11 +66,7 @@ int			main(int argc, char **argv)
 	int			fd;
 	char		*file_str;
 	rt_scene	*scene_now;
-<<<<<<< HEAD
 	t_mlx_show	*the_show;
-=======
-	mlx_show	*the_show;
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 
 	if (argc < 2 || argc > 3 || (argc == 3 && (ft_strcmp(argv[2], "-save"))))
 		return (error_out(-1)); // ERROR TOO FEW ARGUMENTS == -1

@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   prepare_to_show.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/05/12 12:05:37 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/26 13:04:57 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 #include <stdio.h>
 
-<<<<<<< HEAD
 int		fill_pixel(rt_scene *scene_now, t_mlx_show *the_show, double *ray, int pix)
 {
 	// TO BE FILLED:
@@ -55,21 +54,15 @@ int		fill_the_image(rt_scene *scene_now, t_mlx_show *the_show)
 }
 
 int		put_it_on(rt_scene *scene_now, t_mlx_show *the_show)
-=======
-int		put_it_on(rt_scene *scene_now, mlx_show *the_show)
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 {
 	if (!scene_now)
 		return (-1060);
 	if (!the_show)
 		return (-1061);
 	printf ("\n* * * * * I WOULD BE PUTTING OUT AMAZING THINGS RIGHT NOW * * * * * *\n\n");
-<<<<<<< HEAD
 	if (!fill_the_image(scene_now, the_show))
 		return (-1062);
 	
-=======
->>>>>>> 6016ff846d7f16667c0c287812ba08e802dcbcd1
 	return(0);
 }
 

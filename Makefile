@@ -1,10 +1,7 @@
-SRCS	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c
-
-SRCS_B	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c
+SRCS	= srcs/main_calls.c srcs/read_rt.c srcs/str_utils.c srcs/ft_calloc.c srcs/ft_split.c srcs/prepare_to_show.c srcs/struct_fts.c srcs/errors.c srcs/process_elements1.c srcs/math_calculs.c
 
 OBJS	= ${SRCS:.c=.o}
 
-OBJS_B	= ${SRCS:.c=.o}
 
 NAME	= bsq
 
@@ -30,14 +27,18 @@ ${NAME}:	${OBJS}
 			@cp ./minilibx_opengl/libmlx.a libmlx.a
 			${CC} -I${INCLS} ${CFLAGS} $(LIBMLX) -o ${NAME} ${OBJS} 
 		
+clean:
+			${RM} ${OBJS}
 
 all:		${NAME}
-
-clean:
 			${RM} ${OBJS}
 
 fclean:		clean
 			${RM} ${NAME}
+
+fmlxclean:	fclean
+			${RM} libmlx.a
+			${RM} libmlx.dylib
 
 re:			fclean all
 
