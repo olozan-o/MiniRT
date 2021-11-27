@@ -9,6 +9,7 @@ SRCS	= 	srcs/main_calls.c \
 			srcs/prepare_to_show.c \
 			srcs/struct_fts.c \
 			srcs/process_elements1.c \
+			srcs/process_elements2.c \
 			srcs/math_calculs.c \
 
 detected_OS := $(shell uname)
