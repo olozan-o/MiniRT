@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 23:58:43 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 22:54:28 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,19 @@
 # define	MINIRT_H
 
 # define	BUFFER_SIZE 128
-# define	WIDTH 1080
-# define	HEIGHT 720
+# define	WIDTH 540
+# define	HEIGHT 280
+# define	ESC_KEY 65307
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
 # include "mlx.h"
 # include <math.h>
+
+typedef struct s_color
+{
+	int8_t			channel[4];
+}					t_color;
 
 typedef struct s_show
 {
@@ -47,6 +53,8 @@ typedef	struct s_objs
 typedef	struct 		scene
 {
 	int				height;
+	double			*up_v;
+	double			**rot_m;
 	int				width;
 	double			a_lum;
 	int				*a_color;
@@ -54,9 +62,6 @@ typedef	struct 		scene
 	rt_objs			*camera; // to be rechecked :: single or double pointers ??
 	rt_objs			*f_light;
 }					rt_scene;
-
-static double	*g_up_vector = NULL;
-static double	**g_rot_m;
 
 /*			PARSING FUNCTIONS			*/
 char			*read_everything(int fd);
@@ -75,6 +80,7 @@ int				object_error(char c);
 int				error_out(int code);
 int				check_all(rt_scene *sc);
 int				exit_program(char *str);
+int				operate_key_press(int key);
 
 /*			STR FUNCTIONS				*/
 char			**ft_split(char const *s, char c);
@@ -95,8 +101,9 @@ double     		*scalar_product(double *one, double *other);
 double			single_product(double *one, double *other);
 double      	*substract(double *one, double *other);
 double      	*normalize(double *these3);
-void      		compute_rotation(double *orig, double *dir);
-void      		*world_to_cam(double *vec);
+double 			**compute_rotation(double *orig, double *dir, double *up_v);
+void			*world_to_cam(double *vec, double **rot_m);
+double			*rotate_cam(double *origin, double *trans, double *up_v);
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);

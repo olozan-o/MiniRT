@@ -22,11 +22,11 @@ INCL=		-I includes/
 
 ifeq ($(detected_OS),Darwin)        # Mac OS X
     CFLAGS=  -I lib42/includes/ -I ./mlx/    \ 
--L ./mlx/ -lmlx -framework OpenGL -framework AppKit -lm #-g3 -fsanitize=address -Wall -Wextra -Werror
+-L ./mlx/ -lmlx -framework OpenGL -framework AppKit -lm #-g3 -fsanitize=address # -Wall -Wextra -Werror
 endif
 ifeq ($(detected_OS),Linux)
     CFLAGS=  -I lib42/includes/ -I ./mlx/    \
--L ./mlx/ -lmlx -lXext -lX11 -lm #-g3 -fsanitize=address -Wall -Wextra -Werror
+-L ./mlx/ -lmlx -lXext -lX11 -lm -g3 #-fsanitize=address #-Wall -Wextra -Werror
 endif
 
 all: $(NAME)

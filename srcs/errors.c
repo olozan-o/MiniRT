@@ -6,11 +6,18 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 16:51:39 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 23:40:50 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 12:55:33 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+int		operate_key_press(int key)
+{
+	if (key == ESC_KEY)
+		exit_program("Thank you, come again!\n");
+	return (0);
+}
 
 int		exit_program(char *str)
 {

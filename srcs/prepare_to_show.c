@@ -6,14 +6,25 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/26 23:47:03 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:03:31 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-#include <stdio.h>
 
-int		fill_pixel(rt_scene *scene_now, t_mlx_show *the_show, double *ray, int pix)
+static void	fill_pixel(t_mlx_show *the_show, int x, int y, t_color color)
+{
+	int	i;
+
+	i = (x * the_show->bpp / 8)
+		+ (y * the_show->size_line);
+	the_show->data[i] = color.channel[3];
+	the_show->data[++i] = color.channel[2];
+	the_show->data[++i] = color.channel[1];
+	the_show->data[++i] = color.channel[0];
+}
+
+int		find_pixel(double *origin, double *ray, rt_scene *sc)
 {
 	// TO BE FILLED:
 
@@ -25,42 +36,50 @@ int		fill_pixel(rt_scene *scene_now, t_mlx_show *the_show, double *ray, int pix)
 }
 
 
-int		fill_the_image(rt_scene *scene_now, t_mlx_show *the_show)
+int		fill_the_image(rt_scene *sc, t_mlx_show *the_show)
 {
 	int		x_i;
 	int		y_i;
 	double	*ray_i;
 	double	fov;
-	int		aux;
 
-	compute_rotation(scene_now->camera->coord, scene_now->camera->orient);
 	ray_i = ft_calloc(3, sizeof(double));
 	x_i = -1;
-	y_i = -1;
-	fov = scene_now->camera->params[0];
-	while (++x_i < scene_now->width)
-		while (++y_i < scene_now->height)
+	fov = sc->camera->params[0];
+	while (++x_i < sc->width)
+	{
+		y_i = -1;
+		while (++y_i < sc->height)
 		{
-			ray_i[0] = (2 * ((x_i + 0.5) / scene_now->width) - 1) * tan(fov / 2 * M_PI / 180) 
-						* scene_now->width / scene_now->height;
-			ray_i[1] = (1 - 2 * (y_i + 0.5) / scene_now->height) * tan(fov / 2 * M_PI / 180);
-			ray_i[2] = -1; // or 1 ??
-			world_to_cam(normalize(ray_i));
-			aux = y_i * the_show->size_line + the_show->bpp / 8 * x_i;
-			fill_pixel(scene_now, the_show, ray_i, aux);
+			//ray_i = cam_here(sc, x_i, y_i);
+			ray_i[0] = x_i - sc->width / 2;
+			ray_i[1] = y_i - sc->height / 2;
+			ray_i[2] = sc->width / 2 / tan(fov);
+			normalize(ray_i);
+			//if (y_i % 50 == 0)
+			//	printf("\nx=%d, y=%d, then: %f or %f or %f \t", x_i, y_i, ray_i[0], ray_i[1], ray_i[2]);
+			ray_i = rotate_cam(ray_i, sc->camera->orient, sc->up_v);
+			//if (y_i % 50 == 0)
+			//	printf("\n\tnormalized:: %f or %f or %f \t", ray_i[0], ray_i[1], ray_i[2]);
+			//world_to_cam(ray_i, sc->rot_m);
+			//if (y_i % 50 == 0)
+			//	printf("\t\t RAY! {%f,%f,%f}", ray_i[0], ray_i[1], ray_i[2]);
+			find_pixel(sc->camera->coord, ray_i, sc);
 		}
-	
-	return (0);
+		printf("\n\n");
+	}
+	free(ray_i);
+	return (1);
 }
 
-int		put_it_on(rt_scene *scene_now, t_mlx_show *the_show)
+int		put_it_on(rt_scene *sc, t_mlx_show *the_show)
 {
-	if (!scene_now)
+	if (!sc)
 		return (-1060);
 	if (!the_show)
 		return (-1061);
 	printf ("\n* * * * * I WOULD BE PUTTING OUT AMAZING THINGS RIGHT NOW * * * * * *\n\n");
-	if (!fill_the_image(scene_now, the_show))
+	if (!fill_the_image(sc, the_show))
 		return (-1062);
 	
 	return(0);

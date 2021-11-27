@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 15:38:00 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 00:00:57 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 11:02:01 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ rt_objs		*push_new_object(rt_objs **begin_list)
 
 	if (!(new_one = malloc(sizeof(rt_objs))))
 		return (NULL);
-	new_one->coord = ft_calloc(3, sizeof(double));
-	new_one->orient = ft_calloc(3, sizeof(double));
-	new_one->params = ft_calloc(3, sizeof(double));
-	new_one->color = ft_calloc(3, sizeof(double));
+	new_one->coord = ft_calloc(4, sizeof(double));
+	new_one->orient = ft_calloc(4, sizeof(double));
+	new_one->params = ft_calloc(4, sizeof(double));
+	new_one->color = ft_calloc(4, sizeof(double));
 	new_one->next = *begin_list;
 	*begin_list = new_one;
 	return (new_one);

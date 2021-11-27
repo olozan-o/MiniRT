@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 10:38:51 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 10:40:41 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 20:41:27 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,13 @@ int	process_camera(rt_scene *sc, char *begin)
 	if (!it)
 		return (-41);
 	it = get_some_d(this_obj->params, 1, it);
+	this_obj->params[0] = this_obj->params[0] * M_PI / 180 / 2;
 	if (!it)
 		return (-41);
 	if (this_obj->orient[0] > 1 || this_obj->orient[0] < -1
 		|| this_obj->orient[1] > 1 || this_obj->orient[1] < -1
 		|| this_obj->orient[2] > 1 || this_obj->orient[2] < -1
-		|| this_obj->params[0] < 0 || this_obj->params[0] > 180)
+		|| this_obj->params[0] < 0 || this_obj->params[0] > 3.141592)
 		return (-41);
 	return (1);
 }
@@ -71,6 +72,7 @@ int	process_light(rt_scene *sc, char *begin)
 	this_obj = push_new_object(&(sc->f_light));
 	if (!this_obj)
 		return (0);
+	sc->f_light = this_obj;
 	this_obj->type = 'L';
 	it = get_some_d(this_obj->coord, 3, begin + 1);
 	if (!it)

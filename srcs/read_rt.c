@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 10:24:03 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 23:35:36 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/27 12:36:44 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ char		*read_everything(int fd)
 	char	*buffer;
 	int		i_read;
 
-	if (!(buffer = malloc(BUFFER_SIZE)))
+	if (!(buffer = malloc(BUFFER_SIZE + 1)))
 		return (NULL);
-	if (!(resultat = malloc(BUFFER_SIZE)))
+	if (!(resultat = malloc(BUFFER_SIZE + 1)))
 		return (NULL);
+	buffer[BUFFER_SIZE] = '\0';
 	resultat[0] = '\0';
 	while ((i_read = read(fd, buffer, BUFFER_SIZE)))
 	{
@@ -54,18 +55,18 @@ int			process_everything(char *all, rt_scene *this_scene)
 	int		i;
 	char	**all_elements;
 
-	all_elements = ft_split(all, '\n'); // IL FAUDRAIT PAS CHANGER POUR QUE CE SOIT UN SPLIT À PARTIR DE \n\n ??
+	all_elements = ft_split(all, '\n');
 	i = 0;
-	this_scene->width = WIDTH;
-	this_scene->height = HEIGHT;
 	while (all_elements[i])
 	{
 		printf("%s\n", all_elements[i]);
 		if (all_elements[i][0])
 			if (process_element(this_scene, all_elements[i]) < 0)
-				return (40); // ERROR > element not formatted correctly
+				exit_program("INCORRECT ELEMENT FORMATTING\n");
+		free(all_elements[i]);
 		i++;
 	}
+	free(all_elements[i]);
+	free(all_elements);
 	return (0);
-	// negative values in this_scene mean doubles where there souldn't be
 }
