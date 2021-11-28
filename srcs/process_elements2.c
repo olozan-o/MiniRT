@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   process_elements2.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/27 10:38:51 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 20:41:27 by olozano-         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   process_elements2.c								:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: olozano- <olozano-@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2021/11/27 10:38:51 by olozano-		  #+#	#+#			 */
+/*   Updated: 2021/11/28 15:11:40 by olozano-		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "minirt.h"
@@ -80,7 +80,7 @@ int	process_light(rt_scene *sc, char *begin)
 	it = get_some_d(this_obj->params, 1, it);
 	if (!it)
 		return (-41);
-	it = get_some_d(this_obj->color, 3, it);
+	it = get_some_i(this_obj->color, 3, it);
 	if (!it)
 		return (-41);
 	if (this_obj->orient[0] > 255 || this_obj->orient[0] < 0

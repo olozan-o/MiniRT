@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   process_elements1.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/15 19:29:11 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/28 10:58:24 by olozano-         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   process_elements1.c								:+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: olozano- <olozano-@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2020/01/15 19:29:11 by olozano-		  #+#	#+#			 */
+/*   Updated: 2021/11/28 15:11:14 by olozano-		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "minirt.h"
@@ -22,7 +22,7 @@ char	*process_cylinder(char *begin, rt_objs *ob)
 	it = get_some_d(ob->params, 2, it);
 	if (!it)
 		return (NULL);
-	it = get_some_d(ob->color, 3, it);
+	it = get_some_i(ob->color, 3, it);
 	if (!it)
 		return (NULL);
 	ob->type = 'c';
@@ -34,9 +34,10 @@ char	*process_plane(char *begin, rt_objs *ob)
 	char	*it;
 
 	it = get_some_d(ob->orient, 3, begin);
+	normalize(ob->orient);
 	if (!it)
 		return (NULL);
-	it = get_some_d(ob->color, 3, it);
+	it = get_some_i(ob->color, 3, it);
 	if (!it)
 		return (NULL);
 	ob->type = 'p';
@@ -50,7 +51,7 @@ char	*process_sphere(char *begin, rt_objs *ob)
 	it = get_some_d(ob->params, 1, begin);
 	if (!it)
 		return (NULL);
-	it = get_some_d(ob->color, 3, it);
+	it = get_some_i(ob->color, 3, it);
 	if (!it)
 		return (NULL);
 	ob->type = 's';

@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/28 13:31:44 by olozano-         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   minirt.h										   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: olozano- <olozano-@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2020/01/14 12:31:02 by olozano-		  #+#	#+#			 */
+/*   Updated: 2021/11/28 18:48:25 by olozano-		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
@@ -15,8 +15,8 @@
 # define	MINIRT_H
 
 # define	BUFFER_SIZE 128
-# define	WIDTH 1080
-# define	HEIGHT 720
+# define	WIDTH 400
+# define	HEIGHT 400
 # define	ESC_KEY 65307
 # define	INF 2147483647
 # include <stdlib.h>
@@ -24,11 +24,6 @@
 # include <stdio.h>
 # include "mlx.h"
 # include <math.h>
-
-typedef struct s_color
-{
-	int8_t			channel[4];
-}					t_color;
 
 typedef struct s_show
 {
@@ -47,7 +42,7 @@ typedef	struct s_objs
 	double			*coord;
 	double			*orient;
 	double			*params;
-	double			*color;
+	int				*color;
 	struct s_objs	*next;
 }					rt_objs;
 
@@ -71,11 +66,13 @@ int				process_ambiance(rt_scene *sc, char *begin);
 int				process_camera(rt_scene *sc, char *begin);
 int				process_light(rt_scene *sc, char *begin);
 int				process_object(rt_scene *sc, char *begin);
+char			*get_some_d(double *things, int how_many, char *where_from);
+char			*get_some_i(int *things, int how_many, char *where_from);
 
 /*			INTERNAL STRUCT FUNCTIONS	*/
-char			*get_some_d(double *things, int how_many, char *where_from);
 rt_objs			*push_new_object(rt_objs **begin_list);
 int				object_error(char c);
+double			*v_dup(double *this);
 
 /*		  	ERROR AND DEBUGGING			*/
 int				error_out(int code);
@@ -97,22 +94,22 @@ int				ft_isspace(char c);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*			MATH FUNCTIONS				*/
-double     		*cross_product(double *one, double *other);
+double	 		*cross_product(double *one, double *other);
 double			dot_product(double *one, double *other);
-double     		*scalar_product(double *one, double *other);
-void        	scale_v(double *v, double n);
-double      	*substract(double *one, double *other);
-double      	*normalize(double *these3);
+void			scale_v(double *v, double n);
+double	  	*substract(double *one, double *other);
+double	  	*normalize(double *these3);
 double 			**compute_rotation(double *orig, double *dir, double *up_v);
 void			*world_to_cam(double *vec, double **rot_m);
 double			*rotate_cam(double *origin, double *trans, double *up_v);
 double			inter_sphere(double *origin, double *ray, rt_objs *object);
 double			inter_plane(double *origin, double *ray, rt_objs *object);
 double			inter_cylinder(double *origin, double *ray, rt_objs *object);
+double	 		*add_v(double *one, double *other);
+
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
-t_color			*get_color(double *origin, double *ray, rt_objs *intersected);
-
+int				*get_color(double *origin, double *ray, rt_objs *intersected, rt_scene *sc);
 
 #endif

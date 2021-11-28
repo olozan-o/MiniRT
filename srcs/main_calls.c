@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main_calls.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/14 10:28:29 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 20:58:26 by olozano-         ###   ########.fr       */
-/*                                                                            */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   main_calls.c									   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: olozano- <olozano-@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2020/01/14 10:28:29 by olozano-		  #+#	#+#			 */
+/*   Updated: 2021/11/28 16:57:28 by olozano-		 ###   ########.fr	   */
+/*																			*/
 /* ************************************************************************** */
 
 #include "minirt.h"
@@ -29,7 +29,7 @@ rt_scene	*make_a_scene(void)
 	new_scene->camera = NULL;
 	new_scene->up_v = ft_calloc(3, sizeof(double));
 	new_scene->up_v[0] = 0;
-	new_scene->up_v[1] = 1;
+	new_scene->up_v[1] = -1;
 	new_scene->up_v[2] = 0;
 	return (new_scene);
 }

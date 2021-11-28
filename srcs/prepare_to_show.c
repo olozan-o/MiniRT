@@ -6,36 +6,35 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/28 13:31:59 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 20:21:18 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static void	fill_pixel(t_mlx_show *the_show, int x, int y, t_color *color)
+static void	fill_pixel(t_mlx_show *the_show, int x, int y, int *color)
 {
 	int	i;
 
 	i = (x * 4)
 		+ (y * the_show->size_line);
-	if (x == 500)
-		printf("Colors at (%d, %d): [%hhu, %hhu, %hhu, %hhu], \t bpp = %d\n", x, y,
-				color->channel[0], color->channel[1], color->channel[2], color->channel[3], the_show->bpp);
+	//if (x == 500)
+	//	printf("Colors at (%d, %d): [%d, %d, %d, %d], \t bpp = %d\n", x, y,
+	//			color[0], color[1], color[2], color[3], the_show->bpp);
 
-	the_show->data[i] = color->channel[3];
-	the_show->data[++i] = color->channel[2];
-	the_show->data[++i] = color->channel[1];
-	the_show->data[++i] = color->channel[0];
+	the_show->data[i] = color[2];
+	the_show->data[++i] = color[1];
+	the_show->data[++i] = color[0];
+	the_show->data[++i] = color[3];
 	free(color);
 }
 
-t_color	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_show)
+int	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_show)
 {
 	rt_objs	*intersected;
 	rt_objs	*iter;
 	double	dist;
 	double	closest;
-	t_color	color;
 
 	// TO BE FILLED:
 
@@ -61,6 +60,10 @@ t_color	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_s
 		}
 		iter = iter->next;
 	}
+	if (!intersected)
+		return(ft_calloc(4, sizeof(int)));
+	//printf("\t+++Intersection of ray (%.5f, %.5f, %.5f) with object of type [%c] at %f distance\n", 
+	//	ray[0], ray[1], ray[2], intersected->type, closest);
 	scale_v(ray, closest);
 	return (get_color(origin, ray, intersected, sc));
 }
@@ -138,7 +141,7 @@ int		check_all(rt_scene *sc)
 		printf("--orientation--: %f, %f, %f\n", iterator->orient[0], 
 				iterator->orient[1], iterator->orient[2]);
 		printf("--aperture?--: %f\n", iterator->params[0]);
-		printf("--color--: %f, %f, %f\n", iterator->color[0], 
+		printf("--color--: %d, %d, %d\n", iterator->color[0], 
 				iterator->color[1], iterator->color[2]);
 		iterator = iterator->next;
 	}
@@ -153,7 +156,7 @@ int		check_all(rt_scene *sc)
 				iterator->orient[1], iterator->orient[2]);
 		printf("--parameters--: %f, %f, %f\t", iterator->params[0], 
 				iterator->params[1], iterator->params[2]);
-		printf("--color--: %f, %f, %f\n\n", iterator->color[0], 
+		printf("--color--: %d, %d, %d\n\n", iterator->color[0], 
 				iterator->color[1], iterator->color[2]);
 		iterator = iterator->next;
 	}
