@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/11/28 11:49:48 by olozano-          #+#    #+#              #
+#    Updated: 2021/11/28 13:11:42 by olozano-         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME	=	miniRT
 
 SRCS	= 	srcs/main_calls.c \
@@ -11,8 +23,8 @@ SRCS	= 	srcs/main_calls.c \
 			srcs/process_elements1.c \
 			srcs/process_elements2.c \
 			srcs/math_calculs.c \
-
-detected_OS := $(shell uname)
+			srcs/intersections.c \
+			srcs/light_color.c
 
 OBJS_S=		$(SRCS:%.c=%.o)
 
@@ -20,14 +32,8 @@ CC=gcc
 
 INCL=		-I includes/
 
-ifeq ($(detected_OS),Darwin)        # Mac OS X
-    CFLAGS=  -I lib42/includes/ -I ./mlx/    \ 
--L ./mlx/ -lmlx -framework OpenGL -framework AppKit -lm #-g3 -fsanitize=address # -Wall -Wextra -Werror
-endif
-ifeq ($(detected_OS),Linux)
-    CFLAGS=  -I lib42/includes/ -I ./mlx/    \
+CFLAGS=  -I lib42/includes/ -I ./mlx/    \
 -L ./mlx/ -lmlx -lXext -lX11 -lm -g3 #-fsanitize=address #-Wall -Wextra -Werror
-endif
 
 all: $(NAME)
 

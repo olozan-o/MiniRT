@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 12:31:02 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 22:54:28 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 13:31:44 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 # define	MINIRT_H
 
 # define	BUFFER_SIZE 128
-# define	WIDTH 540
-# define	HEIGHT 280
+# define	WIDTH 1080
+# define	HEIGHT 720
 # define	ESC_KEY 65307
+# define	INF 2147483647
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -97,16 +98,21 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*			MATH FUNCTIONS				*/
 double     		*cross_product(double *one, double *other);
+double			dot_product(double *one, double *other);
 double     		*scalar_product(double *one, double *other);
-double			single_product(double *one, double *other);
+void        	scale_v(double *v, double n);
 double      	*substract(double *one, double *other);
 double      	*normalize(double *these3);
 double 			**compute_rotation(double *orig, double *dir, double *up_v);
 void			*world_to_cam(double *vec, double **rot_m);
 double			*rotate_cam(double *origin, double *trans, double *up_v);
+double			inter_sphere(double *origin, double *ray, rt_objs *object);
+double			inter_plane(double *origin, double *ray, rt_objs *object);
+double			inter_cylinder(double *origin, double *ray, rt_objs *object);
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
+t_color			*get_color(double *origin, double *ray, rt_objs *intersected);
 
 
 #endif

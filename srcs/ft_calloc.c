@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 20:20:33 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/26 20:20:38 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 11:44:37 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ void	*ft_calloc(size_t nmemb, size_t size)
 {
 	char	*cpy;
 
-	if (!(cpy = malloc(nmemb * size)))
-		return (NULL);
+	cpy = malloc(nmemb * size);
+	if (!cpy)
+		exit_program("Error\nMemory allocation failed !\n");
 	ft_bzero(cpy, size * nmemb);
 	return (cpy);
 }

@@ -6,33 +6,63 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/27 23:03:31 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 13:31:59 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static void	fill_pixel(t_mlx_show *the_show, int x, int y, t_color color)
+static void	fill_pixel(t_mlx_show *the_show, int x, int y, t_color *color)
 {
 	int	i;
 
-	i = (x * the_show->bpp / 8)
+	i = (x * 4)
 		+ (y * the_show->size_line);
-	the_show->data[i] = color.channel[3];
-	the_show->data[++i] = color.channel[2];
-	the_show->data[++i] = color.channel[1];
-	the_show->data[++i] = color.channel[0];
+	if (x == 500)
+		printf("Colors at (%d, %d): [%hhu, %hhu, %hhu, %hhu], \t bpp = %d\n", x, y,
+				color->channel[0], color->channel[1], color->channel[2], color->channel[3], the_show->bpp);
+
+	the_show->data[i] = color->channel[3];
+	the_show->data[++i] = color->channel[2];
+	the_show->data[++i] = color->channel[1];
+	the_show->data[++i] = color->channel[0];
+	free(color);
 }
 
-int		find_pixel(double *origin, double *ray, rt_scene *sc)
+t_color	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_show)
 {
+	rt_objs	*intersected;
+	rt_objs	*iter;
+	double	dist;
+	double	closest;
+	t_color	color;
+
 	// TO BE FILLED:
 
 	// go find what the ray intersects with
 	// go find the color it gets from light hitting it
 	
 	// fill the 'pix' pixel with the appropriate color
-	return (0);
+	iter = sc->obj_list;
+	closest = INF;
+	intersected = NULL;
+	while (iter)
+	{
+		if (iter->type == 's')
+			dist = inter_sphere(origin, ray, iter);
+		else if (iter->type == 'p')
+			dist = inter_plane(origin, ray, iter);
+		else if (iter->type == 'c')
+			dist = inter_cylinder(origin, ray, iter);
+		if (dist > 0.0001 && dist < closest)
+		{
+			closest = dist;
+			intersected = iter;
+		}
+		iter = iter->next;
+	}
+	scale_v(ray, closest);
+	return (get_color(origin, ray, intersected, sc));
 }
 
 
@@ -51,22 +81,14 @@ int		fill_the_image(rt_scene *sc, t_mlx_show *the_show)
 		y_i = -1;
 		while (++y_i < sc->height)
 		{
-			//ray_i = cam_here(sc, x_i, y_i);
 			ray_i[0] = x_i - sc->width / 2;
 			ray_i[1] = y_i - sc->height / 2;
 			ray_i[2] = sc->width / 2 / tan(fov);
 			normalize(ray_i);
-			//if (y_i % 50 == 0)
-			//	printf("\nx=%d, y=%d, then: %f or %f or %f \t", x_i, y_i, ray_i[0], ray_i[1], ray_i[2]);
 			ray_i = rotate_cam(ray_i, sc->camera->orient, sc->up_v);
-			//if (y_i % 50 == 0)
-			//	printf("\n\tnormalized:: %f or %f or %f \t", ray_i[0], ray_i[1], ray_i[2]);
-			//world_to_cam(ray_i, sc->rot_m);
-			//if (y_i % 50 == 0)
-			//	printf("\t\t RAY! {%f,%f,%f}", ray_i[0], ray_i[1], ray_i[2]);
-			find_pixel(sc->camera->coord, ray_i, sc);
+			fill_pixel(the_show, x_i, y_i, 
+				find_pixel(sc->camera->coord, ray_i, sc, the_show));
 		}
-		printf("\n\n");
 	}
 	free(ray_i);
 	return (1);
@@ -81,7 +103,7 @@ int		put_it_on(rt_scene *sc, t_mlx_show *the_show)
 	printf ("\n* * * * * I WOULD BE PUTTING OUT AMAZING THINGS RIGHT NOW * * * * * *\n\n");
 	if (!fill_the_image(sc, the_show))
 		return (-1062);
-	
+	mlx_put_image_to_window(the_show->mlx_ptr, the_show->win_ptr, the_show->mlx_img, 0, 0);
 	return(0);
 }
 

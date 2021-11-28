@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/15 19:29:11 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/27 10:38:57 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 10:58:24 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*process_cylinder(char *begin, rt_objs *ob)
 	it = get_some_d(ob->color, 3, it);
 	if (!it)
 		return (NULL);
+	ob->type = 'c';
 	return (it);
 }
 
@@ -38,6 +39,7 @@ char	*process_plane(char *begin, rt_objs *ob)
 	it = get_some_d(ob->color, 3, it);
 	if (!it)
 		return (NULL);
+	ob->type = 'p';
 	return (it);
 }
 
@@ -51,6 +53,7 @@ char	*process_sphere(char *begin, rt_objs *ob)
 	it = get_some_d(ob->color, 3, it);
 	if (!it)
 		return (NULL);
+	ob->type = 's';
 	return (it);
 }
 

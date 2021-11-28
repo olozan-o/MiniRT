@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/05 19:57:14 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/27 22:58:11 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/28 13:32:47 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ double      *scalar_product(double *one, double *other)
     return (result);
 }
 
+void        scale_v(double *v, double n)
+{
+    v[0] = v[0] * n;
+    v[1] = v[1] * n;
+    v[2] = v[2] * n;
+}
+
 double		dot_product(double *one, double *other)
 {
     return (one[0]*other[0] + one[1]*other[1] + one[2]*other[2]);
@@ -49,6 +56,18 @@ double      *substract(double *one, double *other)
     result[2] = one[2] - other[2];
     return (result);
 }
+
+double      *add(double *one, double *other)
+{
+    double  *result;
+    
+    result = ft_calloc(3, sizeof(double));
+    result[0] = one[0] + other[0];
+    result[1] = one[1] + other[1];
+    result[2] = one[2] + other[2];
+    return (result);
+}
+
 
 // Pre-multiply a vector by a matrix on the right. 
 // ****** ENTENC que només calen els 3 primers resultats, que lo altre és la magnitud! no?
