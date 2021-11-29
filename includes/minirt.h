@@ -12,18 +12,25 @@
 
 #ifndef MINIRT_H
 
-# define	MINIRT_H
-
-# define	BUFFER_SIZE 128
-# define	WIDTH 400
-# define	HEIGHT 400
-# define	ESC_KEY 65307
-# define	INF 2147483647
+# define MINIRT_H
+# define BUFFER_SIZE 128
+# define WIDTH 400
+# define HEIGHT 400
+# define ESC_KEY 65307
+# define INF 2147483647
+# define THANKS "Thank you, see you soon!\n"
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
 # include "mlx.h"
 # include <math.h>
+
+typedef struct s_v3
+{
+	double	x;
+	double	y;
+	double	z;
+}				t_v3;
 
 typedef struct s_show
 {
@@ -36,47 +43,46 @@ typedef struct s_show
 	int				endian;
 }					t_mlx_show;
 
-typedef	struct s_objs
+typedef struct s_objs
 {
 	char			type;
-	double			*coord;
-	double			*orient;
-	double			*params;
+	t_v3			coord;
+	t_v3			orient;
+	t_v3			params;
 	int				*color;
 	struct s_objs	*next;
-}					rt_objs;
+}					t_objs;
 
-typedef	struct 		scene
+typedef struct scene
 {
 	int				height;
-	double			*up_v;
-	double			**rot_m;
+	t_v3			up_v;
 	int				width;
 	double			a_lum;
 	int				*a_color;
-	rt_objs			*obj_list; // to be rechecked :: single or double pointers ??
-	rt_objs			*camera; // to be rechecked :: single or double pointers ??
-	rt_objs			*f_light;
-}					rt_scene;
+	t_objs			*obj_list;
+	t_objs			*camera;
+	t_objs			*f_light;
+}					t_scene;
 
 /*			PARSING FUNCTIONS			*/
 char			*read_everything(int fd);
-int				process_everything(char *all, rt_scene	*this_scene);
-int				process_ambiance(rt_scene *sc, char *begin);
-int				process_camera(rt_scene *sc, char *begin);
-int				process_light(rt_scene *sc, char *begin);
-int				process_object(rt_scene *sc, char *begin);
-char			*get_some_d(double *things, int how_many, char *where_from);
+int				process_everything(char *all, t_scene	*this_scene);
+int				process_ambiance(t_scene *sc, char *begin);
+int				process_camera(t_scene *sc, char *begin);
+int				process_light(t_scene *sc, char *begin);
+int				process_object(t_scene *sc, char *begin);
+char			*get_some_d(t_v3 *things, int how_many, char *where_from);
 char			*get_some_i(int *things, int how_many, char *where_from);
 
 /*			INTERNAL STRUCT FUNCTIONS	*/
-rt_objs			*push_new_object(rt_objs **begin_list);
+t_objs			*push_new_object(t_objs **begin_list);
 int				object_error(char c);
-double			*v_dup(double *this);
+t_v3			v_dup(t_v3 this);
 
 /*		  	ERROR AND DEBUGGING			*/
 int				error_out(int code);
-int				check_all(rt_scene *sc);
+int				check_all(t_scene *sc);
 int				exit_program(char *str);
 int				operate_key_press(int key);
 
@@ -94,22 +100,20 @@ int				ft_isspace(char c);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*			MATH FUNCTIONS				*/
-double	 		*cross_product(double *one, double *other);
-double			dot_product(double *one, double *other);
-void			scale_v(double *v, double n);
-double	  	*substract(double *one, double *other);
-double	  	*normalize(double *these3);
-double 			**compute_rotation(double *orig, double *dir, double *up_v);
-void			*world_to_cam(double *vec, double **rot_m);
-double			*rotate_cam(double *origin, double *trans, double *up_v);
-double			inter_sphere(double *origin, double *ray, rt_objs *object);
-double			inter_plane(double *origin, double *ray, rt_objs *object);
-double			inter_cylinder(double *origin, double *ray, rt_objs *object);
-double	 		*add_v(double *one, double *other);
-
+t_v3			cross_product(t_v3 one, t_v3 other);
+double			dot_product(t_v3 one, t_v3 other);
+t_v3			scale_v(t_v3 v, double n);
+t_v3			substract(t_v3 one, t_v3 other);
+t_v3			normalize(t_v3 these3);
+double			**compute_rotation(t_v3 orig, t_v3 dir, t_v3 up_v);
+t_v3			rotate_cam(t_v3 origin, t_v3 trans, t_v3 up_v);
+double			inter_sphere(t_v3 origin, t_v3 ray, t_objs *object);
+double			inter_plane(t_v3 origin, t_v3 ray, t_objs *object);
+double			inter_cylinder(t_v3 origin, t_v3 ray, t_objs *object);
+t_v3			add_v(t_v3 one, t_v3 other);
+double			distance3(t_v3 one, t_v3 other);
 
 /*			IMAGE FUNCTIONS				*/
-int				put_it_on(rt_scene *scene_now, t_mlx_show *the_show);
-int				*get_color(double *origin, double *ray, rt_objs *intersected, rt_scene *sc);
-
+int				put_it_on(t_scene *scene_now, t_mlx_show *the_show);
+int				*get_color(t_v3 origin, t_v3 ray, t_objs *inter, t_scene *sc);
 #endif

@@ -12,29 +12,33 @@
 
 #include "minirt.h"
 
-char		*read_everything(int fd)
+char	*read_everything(int fd)
 {
 	char	*resultat;
 	char	*buffer;
 	int		i_read;
 
-	if (!(buffer = malloc(BUFFER_SIZE + 1)))
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	if (!(resultat = malloc(BUFFER_SIZE + 1)))
+	resultat = malloc(BUFFER_SIZE + 1);
+	if (!resultat)
 		return (NULL);
 	buffer[BUFFER_SIZE] = '\0';
 	resultat[0] = '\0';
-	while ((i_read = read(fd, buffer, BUFFER_SIZE)))
+	i_read = read(fd, buffer, BUFFER_SIZE);
+	while (i_read)
 	{
 		resultat = concat_here(resultat, buffer, i_read);
+		i_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	free(buffer);
 	if (i_read < 0)
-		return (NULL); // ERROR READING = 2
+		return (NULL);
 	return (resultat);
 }
 
-int			process_element(rt_scene *sc, char *begin)
+int	process_element(t_scene *sc, char *begin)
 {
 	if (begin[0] == 'A')
 	{
@@ -43,14 +47,16 @@ int			process_element(rt_scene *sc, char *begin)
 		else
 			return (process_ambiance(sc, begin));
 	}
-	if (begin[0] == 'C')
+	if (begin[0] == 'C' && !sc->camera)
 		return (process_camera(sc, begin));
+	else if (begin[0] == 'C' && sc->camera)
+		exit_program("Error\nMultiple cameras in sight\n");
 	if (begin[0] == 'L')
 		return (process_light(sc, begin));
 	return (process_object(sc, begin));
 }
 
-int			process_everything(char *all, rt_scene *this_scene)
+int	process_everything(char *all, t_scene *this_scene)
 {
 	int		i;
 	char	**all_elements;
@@ -59,7 +65,6 @@ int			process_everything(char *all, rt_scene *this_scene)
 	i = 0;
 	while (all_elements[i])
 	{
-		printf("%s\n", all_elements[i]);
 		if (all_elements[i][0])
 			if (process_element(this_scene, all_elements[i]) < 0)
 				exit_program("INCORRECT ELEMENT FORMATTING\n");

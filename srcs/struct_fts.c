@@ -12,27 +12,23 @@
 
 #include "minirt.h"
 
-
-double		*v_dup(double *this)
+t_v3	v_dup(t_v3 this)
 {
-	double	*result;
+	t_v3	result;
 
-	result = ft_calloc(4, sizeof(double));
-	result[0] = this[0];
-	result[1] = this[1];
-	result[2] = this[2];
-	return(result);
+	result.x = this.x;
+	result.y = this.y;
+	result.z = this.z;
+	return (result);
 }
 
-rt_objs		*push_new_object(rt_objs **begin_list)
+t_objs	*push_new_object(t_objs **begin_list)
 {
-	rt_objs	*new_one;
+	t_objs	*new_one;
 
-	if (!(new_one = malloc(sizeof(rt_objs))))
+	new_one = malloc(sizeof(t_objs));
+	if (!new_one)
 		return (NULL);
-	new_one->coord = ft_calloc(4, sizeof(double));
-	new_one->orient = ft_calloc(4, sizeof(double));
-	new_one->params = ft_calloc(4, sizeof(double));
 	new_one->color = ft_calloc(4, sizeof(double));
 	new_one->next = *begin_list;
 	*begin_list = new_one;
@@ -57,18 +53,27 @@ char	*get_some_i(int *things, int how_many, char *where_from)
 	return (NULL);
 }
 
-char	*get_some_d(double *things, int how_many, char *where_from)
+char	*get_some_d(t_v3 *things, int how_many, char *where_from)
 {
-	int	i;
+	int		i;
 	char	*str_backup;
 
 	i = 0;
 	str_backup = where_from;
-	while (i < how_many)
+	if (how_many)
 	{
-		things[i] = ft_strtod(where_from);
+		things->x = ft_strtod(where_from);
 		where_from = advance_through(where_from);
-		i++;
+	}
+	if (how_many > 1)
+	{
+		things->y = ft_strtod(where_from);
+		where_from = advance_through(where_from);
+	}
+	if (how_many > 2)
+	{
+		things->z = ft_strtod(where_from);
+		where_from = advance_through(where_from);
 	}
 	if (ft_isspace(*where_from) || *where_from == '\n' || *where_from == '\0')
 	{

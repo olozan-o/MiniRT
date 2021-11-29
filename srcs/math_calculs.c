@@ -12,52 +12,43 @@
 
 #include "minirt.h"
 
-double	*normalize(double *these3)
+double	distance3(t_v3 one, t_v3 other)
+{
+	return (sqrt(pow(one.x - other.x, 2) + pow(one.y - other.y, 2)
+			+ pow(one.z - other.z, 2)));
+}
+
+t_v3	normalize(t_v3 these3)
 {
 	double	max;
 	int		i;
 
 	max = sqrt(dot_product(these3, these3));
-	these3[0] = these3[0] / max;
-	these3[1] = these3[1] / max;
-	these3[2] = these3[2] / max;
-/*
-	i = 0;
-	max = 1;
-	while (i < 3)
-	{
-		if (fabs(these3[i]) > max)
-			max = fabs(these3[i]);
-		i++;
-	}
-	these3[0] = these3[0] / max;
-	these3[1] = these3[1] / max;
-	these3[2] = these3[2] / max;*/
+	these3.x = these3.x / max;
+	these3.y = these3.y / max;
+	these3.z = these3.z / max;
 	return (these3);
 }
 
-double	*rotate_cam(double *org, double *trans, double *up_v)
+t_v3	rotate_cam(t_v3 org, t_v3 trans, t_v3 up_v)
 {
-	double	*x_axis;
-	double	*y_axis;
-	double	*z_axis;
-	double	*result;
+	t_v3	x_axis;
+	t_v3	y_axis;
+	t_v3	z_axis;
+	t_v3	result;
 
-	result = ft_calloc(4, sizeof(double));
 	z_axis = trans;
-	if (trans[1] != 1 && trans[1] != -1)
+	if (trans.y != 1 && trans.y != -1)
 		x_axis = cross_product(up_v, z_axis);
 	else
 	{
-		x_axis = ft_calloc(4, sizeof(double));
-		x_axis[0] = trans[1];
+		x_axis.x = trans.y;
+		x_axis.y = 0;
+		x_axis.z = 0;
 	}
 	y_axis = cross_product(z_axis, x_axis);
-	result[0] = org[0] * x_axis[0] + org[1] * y_axis[0] + org[2] * z_axis[0];
-	result[1] = org[0] * x_axis[1] + org[1] * y_axis[1] + org[2] * z_axis[1];
-	result[2] = org[0] * x_axis[2] + org[1] * y_axis[2] + org[2] * z_axis[2];
-	free(org);
-	free(x_axis);
-	free(y_axis);
+	result.x = org.x * x_axis.x + org.y * y_axis.x + org.z * z_axis.x;
+	result.y = org.x * x_axis.y + org.y * y_axis.y + org.z * z_axis.y;
+	result.z = org.x * x_axis.z + org.y * y_axis.z + org.z * z_axis.z;
 	return (result);
 }

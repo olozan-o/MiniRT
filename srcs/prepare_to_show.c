@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/28 20:21:18 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/11/29 15:28:46 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ static void	fill_pixel(t_mlx_show *the_show, int x, int y, int *color)
 
 	i = (x * 4)
 		+ (y * the_show->size_line);
-	//if (x == 500)
-	//	printf("Colors at (%d, %d): [%d, %d, %d, %d], \t bpp = %d\n", x, y,
-	//			color[0], color[1], color[2], color[3], the_show->bpp);
-
 	the_show->data[i] = color[2];
 	the_show->data[++i] = color[1];
 	the_show->data[++i] = color[0];
@@ -29,19 +25,13 @@ static void	fill_pixel(t_mlx_show *the_show, int x, int y, int *color)
 	free(color);
 }
 
-int	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_show)
+int	*find_pixel(t_v3 origin, t_v3 ray, t_scene *sc, t_mlx_show *the_show)
 {
-	rt_objs	*intersected;
-	rt_objs	*iter;
+	t_objs	*intersected;
+	t_objs	*iter;
 	double	dist;
 	double	closest;
 
-	// TO BE FILLED:
-
-	// go find what the ray intersects with
-	// go find the color it gets from light hitting it
-	
-	// fill the 'pix' pixel with the appropriate color
 	iter = sc->obj_list;
 	closest = INF;
 	intersected = NULL;
@@ -60,60 +50,52 @@ int	*find_pixel(double *origin, double *ray, rt_scene *sc, t_mlx_show *the_show)
 		}
 		iter = iter->next;
 	}
-	if (!intersected)
-		return(ft_calloc(4, sizeof(int)));
-	//printf("\t+++Intersection of ray (%.5f, %.5f, %.5f) with object of type [%c] at %f distance\n", 
-	//	ray[0], ray[1], ray[2], intersected->type, closest);
-	scale_v(ray, closest);
-	return (get_color(origin, ray, intersected, sc));
+	return (get_color(origin, scale_v(ray, closest), intersected, sc));
 }
 
-
-int		fill_the_image(rt_scene *sc, t_mlx_show *the_show)
+int	fill_the_image(t_scene *sc, t_mlx_show *the_show)
 {
 	int		x_i;
 	int		y_i;
-	double	*ray_i;
+	t_v3	ray_i;
 	double	fov;
 
-	ray_i = ft_calloc(3, sizeof(double));
 	x_i = -1;
-	fov = sc->camera->params[0];
+	fov = sc->camera->params.x;
 	while (++x_i < sc->width)
 	{
 		y_i = -1;
 		while (++y_i < sc->height)
 		{
-			ray_i[0] = x_i - sc->width / 2;
-			ray_i[1] = y_i - sc->height / 2;
-			ray_i[2] = sc->width / 2 / tan(fov);
-			normalize(ray_i);
-			ray_i = rotate_cam(ray_i, sc->camera->orient, sc->up_v);
-			fill_pixel(the_show, x_i, y_i, 
+			ray_i.x = sc->width / 2 - x_i;
+			ray_i.y = y_i - sc->height / 2;
+			ray_i.z = sc->width / 2 / tan(fov);
+			ray_i = rotate_cam(normalize(ray_i), sc->camera->orient, sc->up_v);
+			fill_pixel(the_show, x_i, y_i,
 				find_pixel(sc->camera->coord, ray_i, sc, the_show));
 		}
 	}
-	free(ray_i);
 	return (1);
 }
 
-int		put_it_on(rt_scene *sc, t_mlx_show *the_show)
+int	put_it_on(t_scene *sc, t_mlx_show *the_show)
 {
 	if (!sc)
 		return (-1060);
 	if (!the_show)
 		return (-1061);
-	printf ("\n* * * * * I WOULD BE PUTTING OUT AMAZING THINGS RIGHT NOW * * * * * *\n\n");
 	if (!fill_the_image(sc, the_show))
 		return (-1062);
-	mlx_put_image_to_window(the_show->mlx_ptr, the_show->win_ptr, the_show->mlx_img, 0, 0);
-	return(0);
+	mlx_put_image_to_window(the_show->mlx_ptr, the_show->win_ptr,
+		the_show->mlx_img, 0, 0);
+	return (0);
 }
 
-int		check_all(rt_scene *sc)
+int	check_all(t_scene *sc)
 {
-	rt_objs		*iterator;
+	t_objs		*iterator;
 
+	return (0);
 	printf("\nRESOLUTION:\n--:%d, %d\n", 
 		sc->width, sc->height);
 
@@ -121,11 +103,11 @@ int		check_all(rt_scene *sc)
 	iterator = sc->camera;
 	while (iterator)
 	{
-		printf("position--: %f, %f, %f\n", iterator->coord[0], iterator->coord[1],
-				iterator->coord[2]);
-		printf("--orientation--: %f, %f, %f\n", iterator->orient[0], 
-				iterator->orient[1], iterator->orient[2]);
-		printf("--aperture?--%f\n", iterator->params[0]);
+		printf("position--: %f, %f, %f\n", iterator->coord.x, iterator->coord.y,
+				iterator->coord.z);
+		printf("--orientation--: %f, %f, %f\n", iterator->orient.x, 
+				iterator->orient.y, iterator->orient.z);
+		printf("--aperture?--%f\n", iterator->params.x);
 		iterator = iterator->next;
 	}
 	write(1, "getting to the lights\n", 23);
@@ -136,11 +118,11 @@ int		check_all(rt_scene *sc)
 	iterator = sc->f_light;
 	while (iterator)
 	{
-		printf("position--: %f, %f, %f\n", iterator->coord[0], iterator->coord[1],
-				iterator->coord[2]);
-		printf("--orientation--: %f, %f, %f\n", iterator->orient[0], 
-				iterator->orient[1], iterator->orient[2]);
-		printf("--aperture?--: %f\n", iterator->params[0]);
+		printf("position--: %f, %f, %f\n", iterator->coord.x, iterator->coord.y,
+				iterator->coord.z);
+		printf("--orientation--: %f, %f, %f\n", iterator->orient.x, 
+				iterator->orient.y, iterator->orient.z);
+		printf("--aperture?--: %f\n", iterator->params.x);
 		printf("--color--: %d, %d, %d\n", iterator->color[0], 
 				iterator->color[1], iterator->color[2]);
 		iterator = iterator->next;
@@ -150,12 +132,12 @@ int		check_all(rt_scene *sc)
 	iterator = sc->obj_list;
 	while (iterator)
 	{
-		printf("position--: %f, %f, %f\t", iterator->coord[0], iterator->coord[1],
-				iterator->coord[2]);
-		printf("--other stuff--: %f, %f, %f\n", iterator->orient[0], 
-				iterator->orient[1], iterator->orient[2]);
-		printf("--parameters--: %f, %f, %f\t", iterator->params[0], 
-				iterator->params[1], iterator->params[2]);
+		printf("position--: %f, %f, %f\t", iterator->coord.x, iterator->coord.y,
+				iterator->coord.z);
+		printf("--other stuff--: %f, %f, %f\n", iterator->orient.x, 
+				iterator->orient.y, iterator->orient.z);
+		printf("--parameters--: %f, %f, %f\t", iterator->params.x, 
+				iterator->params.y, iterator->params.z);
 		printf("--color--: %d, %d, %d\n\n", iterator->color[0], 
 				iterator->color[1], iterator->color[2]);
 		iterator = iterator->next;

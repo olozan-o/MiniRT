@@ -17,6 +17,7 @@ SRCS	= 	srcs/main_calls.c \
 			srcs/errors.c \
 			srcs/ft_calloc.c \
 			srcs/str_utils.c \
+			srcs/str_utils2.c \
 			srcs/ft_split.c \
 			srcs/prepare_to_show.c \
 			srcs/struct_fts.c \
@@ -25,6 +26,7 @@ SRCS	= 	srcs/main_calls.c \
 			srcs/math_calculs.c \
 			srcs/intersections.c \
 			srcs/vector_operations.c \
+			srcs/intersect_cyl.c \
 			srcs/light_color.c
 
 OBJS_S=		$(SRCS:%.c=%.o)

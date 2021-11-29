@@ -12,14 +12,14 @@
 
 #include "minirt.h"
 
-char	*process_cylinder(char *begin, rt_objs *ob)
+char	*process_cylinder(char *begin, t_objs *ob)
 {
 	char	*it;
 
-	it = get_some_d(ob->orient, 3, begin);
+	it = get_some_d(&ob->orient, 3, begin);
 	if (!it)
 		return (NULL);
-	it = get_some_d(ob->params, 2, it);
+	it = get_some_d(&ob->params, 2, it);
 	if (!it)
 		return (NULL);
 	it = get_some_i(ob->color, 3, it);
@@ -29,11 +29,11 @@ char	*process_cylinder(char *begin, rt_objs *ob)
 	return (it);
 }
 
-char	*process_plane(char *begin, rt_objs *ob)
+char	*process_plane(char *begin, t_objs *ob)
 {
 	char	*it;
 
-	it = get_some_d(ob->orient, 3, begin);
+	it = get_some_d(&ob->orient, 3, begin);
 	normalize(ob->orient);
 	if (!it)
 		return (NULL);
@@ -44,11 +44,11 @@ char	*process_plane(char *begin, rt_objs *ob)
 	return (it);
 }
 
-char	*process_sphere(char *begin, rt_objs *ob)
+char	*process_sphere(char *begin, t_objs *ob)
 {
 	char	*it;
 
-	it = get_some_d(ob->params, 1, begin);
+	it = get_some_d(&ob->params, 1, begin);
 	if (!it)
 		return (NULL);
 	it = get_some_i(ob->color, 3, it);
@@ -58,10 +58,10 @@ char	*process_sphere(char *begin, rt_objs *ob)
 	return (it);
 }
 
-int	process_object(rt_scene *sc, char *begin)
+int	process_object(t_scene *sc, char *begin)
 {
 	char	*it;
-	rt_objs	*ob;
+	t_objs	*ob;
 	int		aux;
 
 	if ((ft_strncmp(begin, "sp", 2) && ft_strncmp(begin, "pl", 2)
@@ -70,7 +70,7 @@ int	process_object(rt_scene *sc, char *begin)
 	ob = push_new_object(&(sc->obj_list));
 	if (!ob)
 		return (-11);
-	it = get_some_d(ob->coord, 3, begin + 2);
+	it = get_some_d(&ob->coord, 3, begin + 2);
 	if (!it)
 		return (-41);
 	if (!ft_strncmp(begin, "cy", 2))

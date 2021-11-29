@@ -12,46 +12,42 @@
 
 #include "minirt.h"
 
-int		operate_key_press(int key)
+int	operate_key_press(int key)
 {
 	if (key == ESC_KEY)
 		exit_program("Thank you, come again!\n");
 	return (0);
 }
 
-int		exit_program(char *str)
+int	exit_program(char *str)
 {
 	ft_putstr_fd(str, 2);
 	exit(0);
 	return (0);
 }
 
-int		object_error(char c)
+int	object_error(char c)
 {
-/*	Sphere:-43		Plane:-44		Square:-45	*/
-/*	Cylinder:-46	Triangle:-47				*/
 	if (c == 's')
 		return (-43);
 	if (c == 'p')
 		return (-44);
-	if (c == 'q')
-		return (-45);
 	if (c == 'c')
 		return (-46);
-	if (c == 't')
-		return (-47);
 	return (-4444);
 }
 
-int		error_out(int code)
+int	error_out(int code)
 {
-	if (code==11)
+	if (code == 11)
 	{
-		ft_putstr_fd("This error is an error\n", 2);
+		exit_program("This error is an error\n");
 	}
-	if (code==40)
+	if (code == 40)
 	{
-		ft_putstr_fd("\nAn element wasn't formatted correctly!\n", 2);
+		exit_program("Error\nAn element wasn't formatted correctly!\n");
 	}
+	else
+		exit_program("Error\nUnknown\n");
 	return (0);
 }

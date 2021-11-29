@@ -12,47 +12,45 @@
 
 #include "minirt.h"
 
-double	*cross_product(double *one, double *other)
+t_v3	cross_product(t_v3 one, t_v3 other)
 {
-	double	*result;
+	t_v3	result;
 
-	result = ft_calloc(3, sizeof(double));
-	result[0] = one[1] * other[2] - one[2] * other[1];
-	result[1] = one[2] * other[0] - one[0] * other[2];
-	result[2] = one[0] * other[1] - one[1] * other[0];
+	result.x = one.y * other.z - one.z * other.y;
+	result.y = one.z * other.x - one.x * other.z;
+	result.z = one.x * other.y - one.y * other.x;
 	return (result);
 }
 
-void	scale_v(double *v, double n)
+t_v3	scale_v(t_v3 v, double n)
 {
-	v[0] = v[0] * n;
-	v[1] = v[1] * n;
-	v[2] = v[2] * n;
+	v.x = v.x * n;
+	v.y = v.y * n;
+	v.z = v.z * n;
+	return (v);
 }
 
-double	dot_product(double *one, double *other)
+double	dot_product(t_v3 one, t_v3 other)
 {
-	return (one[0] * other[0] + one[1] * other[1] + one[2] * other[2]);
+	return (one.x * other.x + one.y * other.y + one.z * other.z);
 }
 
-double	*substract(double *one, double *other)
+t_v3	substract(t_v3 one, t_v3 other)
 {
-	double	*result;
+	t_v3	result;
 
-	result = ft_calloc(3, sizeof(double));
-	result[0] = one[0] - other[0];
-	result[1] = one[1] - other[1];
-	result[2] = one[2] - other[2];
+	result.x = one.x - other.x;
+	result.y = one.y - other.y;
+	result.z = one.z - other.z;
 	return (result);
 }
 
-double	*add_v(double *one, double *other)
+t_v3	add_v(t_v3 one, t_v3 other)
 {
-	double	*result;
+	t_v3	result;
 
-	result = ft_calloc(3, sizeof(double));
-	result[0] = one[0] + other[0];
-	result[1] = one[1] + other[1];
-	result[2] = one[2] + other[2];
+	result.x = one.x + other.x;
+	result.y = one.y + other.y;
+	result.z = one.z + other.z;
 	return (result);
 }

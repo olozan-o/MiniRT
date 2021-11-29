@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-int	process_ambiance(rt_scene *sc, char *begin)
+int	process_ambiance(t_scene *sc, char *begin)
 {
 	char	*it;
 
@@ -33,40 +33,38 @@ int	process_ambiance(rt_scene *sc, char *begin)
 		return (-44);
 }
 
-int	process_camera(rt_scene *sc, char *begin)
+int	process_camera(t_scene *sc, char *begin)
 {
 	char	*it;
-	rt_objs	*this_obj;
+	t_objs	*this_obj;
 
-	if (sc->camera)
-		exit_program("ERROR: Multiple cameras in sight\n");
 	sc->camera = push_new_object(&(sc->camera));
 	if (!sc->camera)
 		return (-11);
 	this_obj = sc->camera;
 	this_obj->type = 'C';
-	it = get_some_d(this_obj->coord, 3, begin + 1);
+	it = get_some_d(&this_obj->coord, 3, begin + 1);
 	if (!it)
 		return (-41);
-	it = get_some_d(this_obj->orient, 3, it);
+	it = get_some_d(&this_obj->orient, 3, it);
 	if (!it)
 		return (-41);
-	it = get_some_d(this_obj->params, 1, it);
-	this_obj->params[0] = this_obj->params[0] * M_PI / 180 / 2;
+	it = get_some_d(&this_obj->params, 1, it);
+	this_obj->params.x = this_obj->params.x * M_PI / 180 / 2;
 	if (!it)
 		return (-41);
-	if (this_obj->orient[0] > 1 || this_obj->orient[0] < -1
-		|| this_obj->orient[1] > 1 || this_obj->orient[1] < -1
-		|| this_obj->orient[2] > 1 || this_obj->orient[2] < -1
-		|| this_obj->params[0] < 0 || this_obj->params[0] > 3.141592)
+	if (this_obj->orient.x > 1 || this_obj->orient.x < -1
+		|| this_obj->orient.y > 1 || this_obj->orient.y < -1
+		|| this_obj->orient.z > 1 || this_obj->orient.z < -1
+		|| this_obj->params.x < 0 || this_obj->params.x > 3.141592)
 		return (-41);
 	return (1);
 }
 
-int	process_light(rt_scene *sc, char *begin)
+int	process_light(t_scene *sc, char *begin)
 {
 	char	*it;
-	rt_objs	*this_obj;
+	t_objs	*this_obj;
 	int		aux;
 
 	this_obj = push_new_object(&(sc->f_light));
@@ -74,19 +72,19 @@ int	process_light(rt_scene *sc, char *begin)
 		return (0);
 	sc->f_light = this_obj;
 	this_obj->type = 'L';
-	it = get_some_d(this_obj->coord, 3, begin + 1);
+	it = get_some_d(&this_obj->coord, 3, begin + 1);
 	if (!it)
 		return (-41);
-	it = get_some_d(this_obj->params, 1, it);
+	it = get_some_d(&this_obj->params, 1, it);
 	if (!it)
 		return (-41);
 	it = get_some_i(this_obj->color, 3, it);
 	if (!it)
 		return (-41);
-	if (this_obj->orient[0] > 255 || this_obj->orient[0] < 0
-		|| this_obj->orient[1] > 255 || this_obj->orient[1] < 0
-		|| this_obj->orient[2] > 255 || this_obj->orient[2] < 0
-		|| this_obj->params[0] < 0 || this_obj->params[0] > 1)
+	if (this_obj->orient.x > 255 || this_obj->orient.x < 0
+		|| this_obj->orient.y > 255 || this_obj->orient.y < 0
+		|| this_obj->orient.z > 255 || this_obj->orient.z < 0
+		|| this_obj->params.x < 0 || this_obj->params.x > 1)
 		return (-42);
 	return (1);
 }
