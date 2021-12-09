@@ -14,8 +14,8 @@
 
 # define MINIRT_H
 # define BUFFER_SIZE 128
-# define WIDTH 800
-# define HEIGHT 600
+# define WIDTH 1280
+# define HEIGHT 720
 # define ESC_KEY 65307
 # define INF 2147483647
 # define THANKS "Thank you, see you soon!\n"
@@ -47,7 +47,7 @@ typedef struct s_objs
 {
 	char			type;
 	t_v3			coord;
-	t_v3			orient;
+	t_v3			or;
 	t_v3			params;
 	t_v3			normal;
 	int				*color;
@@ -78,14 +78,15 @@ char			*get_some_i(int *things, int how_many, char *where_from);
 
 /*			INTERNAL STRUCT FUNCTIONS	*/
 t_objs			*push_new_object(t_objs **begin_list);
-int				object_error(char c);
 t_v3			v_dup(t_v3 this);
+void			initialize_v3(t_v3 *this);
 
 /*		  	ERROR AND DEBUGGING			*/
-int				error_out(int code);
+int 			object_error(t_objs *this);
 int				check_all(t_scene *sc);
 int				exit_program(char *str);
 int				operate_key_press(int key);
+int				color_error(int *col);
 
 /*			STR FUNCTIONS				*/
 char			**ft_split(char const *s, char c);

@@ -46,18 +46,15 @@ int	process_camera(t_scene *sc, char *begin)
 	it = get_some_d(&this_obj->coord, 3, begin + 1);
 	if (!it)
 		return (-41);
-	it = get_some_d(&this_obj->orient, 3, it);
+	it = get_some_d(&this_obj->or, 3, it);
 	if (!it)
 		return (-41);
 	it = get_some_d(&this_obj->params, 1, it);
 	this_obj->params.x = this_obj->params.x * M_PI / 180 / 2;
 	if (!it)
 		return (-41);
-	if (this_obj->orient.x > 1 || this_obj->orient.x < -1
-		|| this_obj->orient.y > 1 || this_obj->orient.y < -1
-		|| this_obj->orient.z > 1 || this_obj->orient.z < -1
-		|| this_obj->params.x < 0 || this_obj->params.x > 3.141592)
-		return (-41);
+	if (this_obj->or.x == 0 && this_obj->or.y == 0 && this_obj->or.x == 0)
+		this_obj->or.z = 1;
 	return (1);
 }
 
@@ -65,7 +62,6 @@ int	process_light(t_scene *sc, char *begin)
 {
 	char	*it;
 	t_objs	*this_obj;
-	int		aux;
 
 	this_obj = push_new_object(&(sc->f_light));
 	if (!this_obj)
@@ -81,9 +77,9 @@ int	process_light(t_scene *sc, char *begin)
 	it = get_some_i(this_obj->color, 3, it);
 	if (!it)
 		return (-41);
-	if (this_obj->orient.x > 255 || this_obj->orient.x < 0
-		|| this_obj->orient.y > 255 || this_obj->orient.y < 0
-		|| this_obj->orient.z > 255 || this_obj->orient.z < 0
+	if (this_obj->or.x > 255 || this_obj->or.x < 0
+		|| this_obj->or.y > 255 || this_obj->or.y < 0
+		|| this_obj->or.z > 255 || this_obj->or.z < 0
 		|| this_obj->params.x < 0 || this_obj->params.x > 1)
 		return (-42);
 	return (1);

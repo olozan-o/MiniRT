@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/11/29 15:28:46 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/12/09 22:26:03 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	fill_pixel(t_mlx_show *the_show, int x, int y, int *color)
 	free(color);
 }
 
-int	*find_pixel(t_v3 origin, t_v3 ray, t_scene *sc, t_mlx_show *the_show)
+int	*find_pixel(t_v3 origin, t_v3 ray, t_scene *sc)
 {
 	t_objs	*intersected;
 	t_objs	*iter;
@@ -43,7 +43,7 @@ int	*find_pixel(t_v3 origin, t_v3 ray, t_scene *sc, t_mlx_show *the_show)
 			dist = inter_plane(origin, ray, iter);
 		else if (iter->type == 'c')
 			dist = inter_cylinder(origin, ray, iter);
-		if (dist > 0.001 && dist < closest)
+		if (dist > 0.0001 && dist < closest)
 		{
 			closest = dist;
 			intersected = iter;
@@ -70,9 +70,9 @@ int	fill_the_image(t_scene *sc, t_mlx_show *the_show)
 			ray_i.x = sc->width / 2 - x_i;
 			ray_i.y = y_i - sc->height / 2;
 			ray_i.z = sc->width / 2 / tan(fov);
-			ray_i = rotate_cam(normalize(ray_i), sc->camera->orient, sc->up_v);
+			ray_i = rotate_cam(normalize(ray_i), sc->camera->or, sc->up_v);
 			fill_pixel(the_show, x_i, y_i,
-				find_pixel(sc->camera->coord, ray_i, sc, the_show));
+				find_pixel(sc->camera->coord, ray_i, sc));
 		}
 	}
 	return (1);
@@ -93,54 +93,29 @@ int	put_it_on(t_scene *sc, t_mlx_show *the_show)
 
 int	check_all(t_scene *sc)
 {
-	t_objs		*iterator;
+	t_objs		*it;
+	t_v3		aux;
 
+	if (color_error(sc->a_color) || color_error(sc->f_light->color))
+		exit_program("Error\nWrong color formatting\n");
+	if (sc->a_lum < 0 || sc->a_lum > 1)
+		exit_program("Error\nAmbiance light error\n");
+	initialize_v3(&aux);
+	if (distance3(sc->camera->or, aux) > 1
+		|| distance3(sc->camera->or, aux) < -1
+		|| distance3(sc->camera->or, aux) == 0
+		|| sc->camera->params.x < 0 || sc->camera->params.x > M_PI)
+		exit_program("Error\nCamera error\n");
+	normalize(sc->camera->or);
+	if (sc->f_light->params.x < 0 || sc->f_light->params.x > 1
+		|| color_error(sc->f_light->color))
+		exit_program("Error\nWrong focused light parmeters\n");
+	it = sc->obj_list;
+	while (it)
+	{
+		if (object_error(it))
+			exit_program("Error\nObject formatting error\n");
+		it = it->next;
+	}
 	return (0);
-	printf("\nRESOLUTION:\n--:%d, %d\n", 
-		sc->width, sc->height);
-
-	printf("\nCAMERAS:\n");
-	iterator = sc->camera;
-	while (iterator)
-	{
-		printf("position--: %f, %f, %f\n", iterator->coord.x, iterator->coord.y,
-				iterator->coord.z);
-		printf("--orientation--: %f, %f, %f\n", iterator->orient.x, 
-				iterator->orient.y, iterator->orient.z);
-		printf("--aperture?--%f\n", iterator->params.x);
-		iterator = iterator->next;
-	}
-	write(1, "getting to the lights\n", 23);
-	printf("\nAMBIANCE LIGHT:\n--:%f, %d, %d, %d\n", 
-		sc->a_lum, sc->a_color[0], sc->a_color[1], sc->a_color[2]);
-
-	printf("\nLIGHTS:\n");
-	iterator = sc->f_light;
-	while (iterator)
-	{
-		printf("position--: %f, %f, %f\n", iterator->coord.x, iterator->coord.y,
-				iterator->coord.z);
-		printf("--orientation--: %f, %f, %f\n", iterator->orient.x, 
-				iterator->orient.y, iterator->orient.z);
-		printf("--aperture?--: %f\n", iterator->params.x);
-		printf("--color--: %d, %d, %d\n", iterator->color[0], 
-				iterator->color[1], iterator->color[2]);
-		iterator = iterator->next;
-	}
-
-	printf("\nOBJECTS:\n");
-	iterator = sc->obj_list;
-	while (iterator)
-	{
-		printf("position--: %f, %f, %f\t", iterator->coord.x, iterator->coord.y,
-				iterator->coord.z);
-		printf("--other stuff--: %f, %f, %f\n", iterator->orient.x, 
-				iterator->orient.y, iterator->orient.z);
-		printf("--parameters--: %f, %f, %f\t", iterator->params.x, 
-				iterator->params.y, iterator->params.z);
-		printf("--color--: %d, %d, %d\n\n", iterator->color[0], 
-				iterator->color[1], iterator->color[2]);
-		iterator = iterator->next;
-	}
-	return (1);
 }

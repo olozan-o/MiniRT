@@ -16,10 +16,10 @@ char	*process_cylinder(char *begin, t_objs *ob)
 {
 	char	*it;
 
-	it = get_some_d(&ob->orient, 3, begin);
+	it = get_some_d(&ob->or, 3, begin);
 	if (!it)
 		return (NULL);
-	ob->orient = normalize(ob->orient);
+	ob->or = normalize(ob->or);
 	it = get_some_d(&ob->params, 2, it);
 	if (!it)
 		return (NULL);
@@ -34,8 +34,8 @@ char	*process_plane(char *begin, t_objs *ob)
 {
 	char	*it;
 
-	it = get_some_d(&ob->orient, 3, begin);
-	ob->orient = normalize(ob->orient);
+	it = get_some_d(&ob->or, 3, begin);
+	ob->or = normalize(ob->or);
 	if (!it)
 		return (NULL);
 	it = get_some_i(ob->color, 3, it);
@@ -63,7 +63,6 @@ int	process_object(t_scene *sc, char *begin)
 {
 	char	*it;
 	t_objs	*ob;
-	int		aux;
 
 	if ((ft_strncmp(begin, "sp", 2) && ft_strncmp(begin, "pl", 2)
 			&& ft_strncmp(begin, "cy", 2)) || !ft_isspace(begin[2]))

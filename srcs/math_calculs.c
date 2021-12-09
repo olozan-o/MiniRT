@@ -21,7 +21,6 @@ double	distance3(t_v3 one, t_v3 other)
 t_v3	normalize(t_v3 these3)
 {
 	double	max;
-	int		i;
 
 	max = sqrt(dot_p(these3, these3));
 	these3.x = these3.x / max;
@@ -30,12 +29,12 @@ t_v3	normalize(t_v3 these3)
 	return (these3);
 }
 
-double		mod(t_v3 v)
+double	mod(t_v3 v)
 {
 	return (sqrt(dot_p(v, v)));
 }
 
-double		vcos(t_v3 a, t_v3 b)
+double	vcos(t_v3 a, t_v3 b)
 {
 	return (dot_p(a, b) / (mod(a) * mod(b)));
 }

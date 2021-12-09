@@ -69,10 +69,10 @@ int	main(int argc, char **argv)
 	t_mlx_show	*the_show;
 
 	if (argc < 2 || argc > 3 || (argc == 3 && (ft_strcmp(argv[2], "-save"))))
-		return (error_out(-1));
+		exit_program("Error\nWrong number of arguments\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		return (error_out(1));
+		exit_program("Error\nCouln't read or find file\n");
 	printf("\n\nBeginning... ");
 	file_str = read_everything(fd);
 	sc_now = make_a_scene();

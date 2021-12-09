@@ -42,7 +42,7 @@ int	*combine_lights(double l1_c, int *l1_color, double l2_c, int *l2_color)
 	return (result);
 }
 
-int	check_objects(t_v3 point, t_v3 light, t_objs *iter, t_v3 ray)
+int	check_objects(t_v3 point, t_v3 light, t_objs *iter)
 {
 	double	dist;
 	double	d_intersect;
@@ -62,40 +62,35 @@ int	check_objects(t_v3 point, t_v3 light, t_objs *iter, t_v3 ray)
 	return (1);
 }
 
-int	*get_color(t_v3 origin, t_v3 ray, t_objs *intersected, t_scene *sc)
+int	*get_color(t_v3 origin, t_v3 ray, t_objs *itsd, t_scene *sc)
 {
 	int		*result;
 	t_objs	*iter;
-	t_v3	point;
 	t_v3	to_light;
 	double	check;
+	t_v3	point;
 
-	if (!intersected)
+	if (!itsd)
 		return (ft_calloc(4, sizeof(int)));
 	check = 1;
 	point = add_v(origin, ray);
+	if (dot_p(itsd->normal, normalize(ray)) > 0)
+		itsd->normal = scale_v(itsd->normal, -1);
+	point = add_v(point, scale_v(normalize(itsd->normal), 0.0001));
 	to_light = normalize(sub(sc->f_light->coord, point));
 	iter = sc->obj_list;
 	while (iter && check)
 	{
-		check = check_objects(point, sc->f_light->coord, iter, ray);
+		check = check_objects(point, sc->f_light->coord, iter);
 		if (check != 0)
 			iter = iter->next;
 	}
-	if (check && dot_p(intersected->normal, to_light) > 0)
-		check = vcos(intersected->normal, to_light);
-	else if (dot_p(intersected->normal, to_light) < 0)
+	if (check && dot_p(itsd->normal, to_light) >= 0)
+		check = vcos(itsd->normal, to_light);
+	else if (dot_p(itsd->normal, to_light) < 0)
 		check = 0;
-	normalize(ray);
-	if (intersected->type == 'c')
-	{
-		printf("At ray (%.2f, %.2f, %.2f), intersecting with %c, ",
-			ray.x, ray.y, ray.z, intersected->type);
-		printf("normal is (%.2f, %.2f, %.2f) giving light of %f\n\n",
-			intersected->normal.x, intersected->normal.y, intersected->normal.z, check);
-	}
 	result = combine_lights(sc->a_lum, sc->a_color,
 			sc->f_light->params.x * check, sc->f_light->color);
-	compute_color(result, intersected->color);
+	compute_color(result, itsd->color);
 	return (result);
 }

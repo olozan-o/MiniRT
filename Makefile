@@ -35,7 +35,7 @@ CC=gcc
 
 INCL=		-I includes/
 
-CFLAGS=  -I lib42/includes/ -I ./mlx/	\
+CFLAGS=  -I lib42/includes/ -Wall -Wextra -Werror -I ./mlx/	\
 -L ./mlx/ -lmlx -lXext -lX11 -lm -g3 #-fsanitize=address #-Wall -Wextra -Werror
 
 all: $(NAME)

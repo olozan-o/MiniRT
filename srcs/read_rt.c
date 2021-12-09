@@ -67,7 +67,7 @@ int	process_everything(char *all, t_scene *this_scene)
 	{
 		if (all_elements[i][0])
 			if (process_element(this_scene, all_elements[i]) < 0)
-				exit_program("INCORRECT ELEMENT FORMATTING\n");
+				exit_program("Error\nIncorrect formatting\n");
 		free(all_elements[i]);
 		i++;
 	}

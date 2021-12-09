@@ -26,28 +26,34 @@ int	exit_program(char *str)
 	return (0);
 }
 
-int	object_error(char c)
+int	color_error(int *col)
 {
-	if (c == 's')
-		return (-43);
-	if (c == 'p')
-		return (-44);
-	if (c == 'c')
-		return (-46);
-	return (-4444);
+	if (col[0] < 0 || col[0] > 255)
+		return (1);
+	if (col[1] < 0 || col[1] > 255)
+		return (1);
+	if (col[2] < 0 || col[2] > 255)
+		return (1);
+	return (0);
 }
 
-int	error_out(int code)
+int	object_error(t_objs *this)
 {
-	if (code == 11)
+	t_v3	aux;
+
+	initialize_v3(&aux);
+	if (color_error(this->color))
+		return (1);
+	if (this->type == 'p' || this->type == 'c')
 	{
-		exit_program("This error is an error\n");
+		if (distance3(this->or, aux) > 1
+			|| distance3(this->or, aux) < -1
+			|| distance3(this->or, aux) == 0)
+			return (1);
 	}
-	if (code == 40)
-	{
-		exit_program("Error\nAn element wasn't formatted correctly!\n");
-	}
-	else
-		exit_program("Error\nUnknown\n");
+	if ((this->type == 'c' || this->type == 's') && this->params.x <= 0)
+		return (1);
+	if (this->type == 'c' && this->params.y <= 0)
+		return (1);
 	return (0);
 }

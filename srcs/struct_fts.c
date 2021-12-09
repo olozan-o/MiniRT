@@ -22,11 +22,11 @@ t_v3	v_dup(t_v3 this)
 	return (result);
 }
 
-void	initialize_v3(t_v3 this)
+void	initialize_v3(t_v3 *this)
 {
-	this.x = 0;
-	this.y = 0;
-	this.z = 0;
+	this->x = 0;
+	this->y = 0;
+	this->z = 0;
 }
 
 t_objs	*push_new_object(t_objs **begin_list)
@@ -38,9 +38,9 @@ t_objs	*push_new_object(t_objs **begin_list)
 		return (NULL);
 	new_one->color = ft_calloc(4, sizeof(int));
 	new_one->next = *begin_list;
-	initialize_v3(new_one->params);
-	initialize_v3(new_one->coord);
-	initialize_v3(new_one->orient);
+	initialize_v3(&new_one->params);
+	initialize_v3(&new_one->coord);
+	initialize_v3(&new_one->or);
 	*begin_list = new_one;
 	return (new_one);
 }
@@ -48,10 +48,8 @@ t_objs	*push_new_object(t_objs **begin_list)
 char	*get_some_i(int *things, int how_many, char *where_from)
 {
 	int		i;
-	char	*str_backup;
 
 	i = 0;
-	str_backup = where_from;
 	while (i < how_many)
 	{
 		things[i] = (int) ft_strtod(where_from);
@@ -65,11 +63,6 @@ char	*get_some_i(int *things, int how_many, char *where_from)
 
 char	*get_some_d(t_v3 *things, int how_many, char *where_from)
 {
-	int		i;
-	char	*str_backup;
-
-	i = 0;
-	str_backup = where_from;
 	if (how_many)
 	{
 		things->x = ft_strtod(where_from);
