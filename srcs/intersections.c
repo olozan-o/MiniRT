@@ -19,10 +19,10 @@ double	inter_sphere(t_v3 origin, t_v3 ray, t_objs *obj)
 	t_v3	aux;
 	t_v3	k;
 
-	aux = substract(origin, obj->coord);
-	k.x = dot_product(ray, ray);
-	k.y = 2 * dot_product(ray, aux);
-	k.z = dot_product(aux, aux) - ((obj->params.x / 2) * (obj->params.x / 2));
+	aux = sub(origin, obj->coord);
+	k.x = dot_p(ray, ray);
+	k.y = 2 * dot_p(ray, aux);
+	k.z = dot_p(aux, aux) - ((obj->params.x / 2) * (obj->params.x / 2));
 	closer = k.y * k.y - (4 * k.x * k.z);
 	if (closer < 0)
 		return (-1);
@@ -34,6 +34,7 @@ double	inter_sphere(t_v3 origin, t_v3 ray, t_objs *obj)
 		closer = inter_p[1];
 	else
 		return (-1);
+	obj->normal = normalize(sub(add_v(origin, scale_v(ray, closer)), obj->coord));
 	return (closer);
 }
 
@@ -43,10 +44,28 @@ double	inter_plane(t_v3 origin, t_v3 ray, t_objs *obj)
 	double	denom;
 	t_v3	aux;
 
-	denom = dot_product(obj->orient, ray);
+	denom = dot_p(obj->orient, ray);
 	if (denom == 0)
 		return (-1);
-	aux = substract(obj->coord, origin);
-	x = dot_product(obj->orient, aux) / denom;
+	aux = sub(obj->coord, origin);
+	x = dot_p(obj->orient, aux) / denom;
+	obj->normal = normalize(v_dup(obj->orient));
 	return (x);
+}
+
+double	compute_plane(t_v3 origin, t_v3 ray, t_objs *obj, int procedure)
+{
+	t_v3	aux3;
+	double	dd;
+
+	if (procedure == 1)
+		aux3 = add_v(obj->coord, scale_v(obj->orient, obj->params.y));
+	else
+		aux3 = v_dup(obj->coord);
+	dd = dot_p(obj->orient, ray);
+	if (!dd)
+		dd = -1;
+	else
+		dd = dot_p(obj->orient, sub(aux3, origin)) / dd;
+	return (dd);
 }

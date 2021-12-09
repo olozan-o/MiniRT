@@ -49,7 +49,7 @@ int	check_objects(t_v3 point, t_v3 light, t_objs *iter, t_v3 ray)
 	t_v3	to_light;
 
 	dist = distance3(light, point);
-	to_light = normalize(substract(light, point));
+	to_light = normalize(sub(light, point));
 	d_intersect = -1;
 	if (iter->type == 'p')
 		d_intersect = inter_plane(point, to_light, iter);
@@ -68,24 +68,34 @@ int	*get_color(t_v3 origin, t_v3 ray, t_objs *intersected, t_scene *sc)
 	t_objs	*iter;
 	t_v3	point;
 	t_v3	to_light;
-	int		check;
+	double	check;
 
 	if (!intersected)
 		return (ft_calloc(4, sizeof(int)));
-	printf("Pixel at (%.2f, %.2f, %.2f), \tvalue is ", ray.x, ray.y, ray.z);
 	check = 1;
 	point = add_v(origin, ray);
-	to_light = normalize(substract(sc->f_light->coord, point));
+	to_light = normalize(sub(sc->f_light->coord, point));
 	iter = sc->obj_list;
 	while (iter && check)
 	{
 		check = check_objects(point, sc->f_light->coord, iter, ray);
-		if (check)
+		if (check != 0)
 			iter = iter->next;
+	}
+	if (check && dot_p(intersected->normal, to_light) > 0)
+		check = vcos(intersected->normal, to_light);
+	else if (dot_p(intersected->normal, to_light) < 0)
+		check = 0;
+	normalize(ray);
+	if (intersected->type == 'c')
+	{
+		printf("At ray (%.2f, %.2f, %.2f), intersecting with %c, ",
+			ray.x, ray.y, ray.z, intersected->type);
+		printf("normal is (%.2f, %.2f, %.2f) giving light of %f\n\n",
+			intersected->normal.x, intersected->normal.y, intersected->normal.z, check);
 	}
 	result = combine_lights(sc->a_lum, sc->a_color,
 			sc->f_light->params.x * check, sc->f_light->color);
 	compute_color(result, intersected->color);
-	printf("[%d, %d, %d]\n", result[0], result[1], result[2]);
 	return (result);
 }

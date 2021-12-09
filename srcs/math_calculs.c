@@ -23,11 +23,21 @@ t_v3	normalize(t_v3 these3)
 	double	max;
 	int		i;
 
-	max = sqrt(dot_product(these3, these3));
+	max = sqrt(dot_p(these3, these3));
 	these3.x = these3.x / max;
 	these3.y = these3.y / max;
 	these3.z = these3.z / max;
 	return (these3);
+}
+
+double		mod(t_v3 v)
+{
+	return (sqrt(dot_p(v, v)));
+}
+
+double		vcos(t_v3 a, t_v3 b)
+{
+	return (dot_p(a, b) / (mod(a) * mod(b)));
 }
 
 t_v3	rotate_cam(t_v3 org, t_v3 trans, t_v3 up_v)

@@ -19,7 +19,7 @@ char	*process_cylinder(char *begin, t_objs *ob)
 	it = get_some_d(&ob->orient, 3, begin);
 	if (!it)
 		return (NULL);
-	normalize(ob->orient);
+	ob->orient = normalize(ob->orient);
 	it = get_some_d(&ob->params, 2, it);
 	if (!it)
 		return (NULL);
@@ -35,7 +35,7 @@ char	*process_plane(char *begin, t_objs *ob)
 	char	*it;
 
 	it = get_some_d(&ob->orient, 3, begin);
-	normalize(ob->orient);
+	ob->orient = normalize(ob->orient);
 	if (!it)
 		return (NULL);
 	it = get_some_i(ob->color, 3, it);

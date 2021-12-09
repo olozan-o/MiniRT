@@ -30,12 +30,12 @@ t_v3	scale_v(t_v3 v, double n)
 	return (v);
 }
 
-double	dot_product(t_v3 one, t_v3 other)
+double	dot_p(t_v3 one, t_v3 other)
 {
 	return (one.x * other.x + one.y * other.y + one.z * other.z);
 }
 
-t_v3	substract(t_v3 one, t_v3 other)
+t_v3	sub(t_v3 one, t_v3 other)
 {
 	t_v3	result;
 

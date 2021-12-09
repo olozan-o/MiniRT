@@ -49,6 +49,7 @@ typedef struct s_objs
 	t_v3			coord;
 	t_v3			orient;
 	t_v3			params;
+	t_v3			normal;
 	int				*color;
 	struct s_objs	*next;
 }					t_objs;
@@ -101,9 +102,9 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*			MATH FUNCTIONS				*/
 t_v3			cross_product(t_v3 one, t_v3 other);
-double			dot_product(t_v3 one, t_v3 other);
+double			dot_p(t_v3 one, t_v3 other);
 t_v3			scale_v(t_v3 v, double n);
-t_v3			substract(t_v3 one, t_v3 other);
+t_v3			sub(t_v3 one, t_v3 other);
 t_v3			normalize(t_v3 these3);
 double			**compute_rotation(t_v3 orig, t_v3 dir, t_v3 up_v);
 t_v3			rotate_cam(t_v3 origin, t_v3 trans, t_v3 up_v);
@@ -112,6 +113,9 @@ double			inter_plane(t_v3 origin, t_v3 ray, t_objs *object);
 double			inter_cylinder(t_v3 origin, t_v3 ray, t_objs *object);
 t_v3			add_v(t_v3 one, t_v3 other);
 double			distance3(t_v3 one, t_v3 other);
+double			compute_plane(t_v3 origin, t_v3 ray, t_objs *obj, int procedure);
+double			vcos(t_v3 a, t_v3 b);
+
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(t_scene *scene_now, t_mlx_show *the_show);
