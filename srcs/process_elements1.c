@@ -19,6 +19,7 @@ char	*process_cylinder(char *begin, t_objs *ob)
 	it = get_some_d(&ob->orient, 3, begin);
 	if (!it)
 		return (NULL);
+	normalize(ob->orient);
 	it = get_some_d(&ob->params, 2, it);
 	if (!it)
 		return (NULL);

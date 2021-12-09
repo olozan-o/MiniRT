@@ -22,6 +22,13 @@ t_v3	v_dup(t_v3 this)
 	return (result);
 }
 
+void	initialize_v3(t_v3 this)
+{
+	this.x = 0;
+	this.y = 0;
+	this.z = 0;
+}
+
 t_objs	*push_new_object(t_objs **begin_list)
 {
 	t_objs	*new_one;
@@ -29,8 +36,11 @@ t_objs	*push_new_object(t_objs **begin_list)
 	new_one = malloc(sizeof(t_objs));
 	if (!new_one)
 		return (NULL);
-	new_one->color = ft_calloc(4, sizeof(double));
+	new_one->color = ft_calloc(4, sizeof(int));
 	new_one->next = *begin_list;
+	initialize_v3(new_one->params);
+	initialize_v3(new_one->coord);
+	initialize_v3(new_one->orient);
 	*begin_list = new_one;
 	return (new_one);
 }

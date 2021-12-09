@@ -57,7 +57,7 @@ int	check_objects(t_v3 point, t_v3 light, t_objs *iter, t_v3 ray)
 		d_intersect = inter_sphere(point, to_light, iter);
 	else if (iter->type == 'c')
 		d_intersect = inter_cylinder(point, to_light, iter);
-	if (d_intersect > 0.0001 && d_intersect < dist)
+	if (d_intersect > 0.001 && d_intersect < dist)
 		return (0);
 	return (1);
 }
@@ -72,6 +72,7 @@ int	*get_color(t_v3 origin, t_v3 ray, t_objs *intersected, t_scene *sc)
 
 	if (!intersected)
 		return (ft_calloc(4, sizeof(int)));
+	printf("Pixel at (%.2f, %.2f, %.2f), \tvalue is ", ray.x, ray.y, ray.z);
 	check = 1;
 	point = add_v(origin, ray);
 	to_light = normalize(substract(sc->f_light->coord, point));
@@ -85,5 +86,6 @@ int	*get_color(t_v3 origin, t_v3 ray, t_objs *intersected, t_scene *sc)
 	result = combine_lights(sc->a_lum, sc->a_color,
 			sc->f_light->params.x * check, sc->f_light->color);
 	compute_color(result, intersected->color);
+	printf("[%d, %d, %d]\n", result[0], result[1], result[2]);
 	return (result);
 }

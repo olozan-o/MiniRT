@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersect_cyl.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: oscarlo <oscarlo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 15:19:40 by olozano-          #+#    #+#             */
-/*   Updated: 2021/11/29 15:20:27 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/12/08 22:39:03 by oscarlo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ int	cy_calculs(t_v3 origin, t_v3 ray, t_objs *obj, double x[2])
 	double	b;
 	double	c;
 
-	v = scale_v(v_dup(obj->orient), dot_product(ray, obj->orient));
+	v = scale_v(obj->orient, dot_product(ray, obj->orient));
 	v = substract(ray, v);
 	a = dot_product(substract(origin, obj->coord), obj->orient);
-	u = scale_v(v_dup(obj->orient), a);
+	u = scale_v(obj->orient, a);
 	u = substract(substract(origin, obj->coord), u);
 	a = dot_product(v, v);
 	b = 2 * dot_product(v, u);
@@ -35,67 +35,86 @@ int	cy_calculs(t_v3 origin, t_v3 ray, t_objs *obj, double x[2])
 
 double	best_body(double dist[2], double x[2], t_objs *obj)
 {
-	if (!((dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.0001)
-			|| (dist[1] >= 0 && dist[1] <= obj->params.y && x[0] > 0.0001)))
+	if (!((dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.001)
+			|| (dist[1] >= 0 && dist[1] <= obj->params.y && x[0] > 0.001)))
 		return (-1);
-	if (dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.0001
-		&& dist[1] >= 0 && dist[1] <= obj->params.y && x[1] > 0.0001)
+	if (dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.001
+		&& dist[1] >= 0 && dist[1] <= obj->params.y && x[1] > 0.001)
 	{
 		if (x[0] < x[1])
 			return (x[0]);
 		else
 			return (x[1]);
 	}
-	else if (dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.0001)
+	else if (dist[0] >= 0 && dist[0] <= obj->params.y && x[0] > 0.001)
 		return (x[0]);
 	else
 		return (x[1]);
 }
 
-double	compute_plane(t_v3 origin, t_v3 ray, t_objs *obj, double dd[2])
+double	compute_plane(t_v3 origin, t_v3 ray, t_objs *obj, int procedure)
 {
 	t_v3	aux3;
+	double	dd;
 
-	aux3 = add_v(obj->coord, scale_v(v_dup(obj->orient), obj->params.y));
-	dd[1] = dot_product(obj->orient, ray);
-	if (!dd[1])
-		dd[1] = -1;
+	if (procedure == 1)
+		aux3 = add_v(obj->coord, scale_v(obj->orient, obj->params.y));
 	else
-		dd[1] = dot_product(obj->orient, substract(aux3, origin)) / dd[1];
-	if (dd[0] < 0 && dd[1] < 0)
+		aux3 = v_dup(obj->coord);
+	dd = dot_product(obj->orient, ray);
+	if (!dd)
+		dd = -1;
+	else
+		dd = dot_product(obj->orient, substract(aux3, origin)) / dd;
+	return (dd);
+}
+
+double	check_caps(t_v3 origin, t_v3 ray, t_objs *obj, t_v3 ccc)
+{
+	double	dd;
+	t_v3	aux;
+
+	if (ccc.x == obj->coord.x && ccc.y == obj->coord.y)
+		dd = compute_plane(origin, ray, obj, 0);
+	else
+		dd = compute_plane(origin, ray, obj, 1);
+	if (dd < 0.001)
+		return(-1);
+	aux = add_v(origin, scale_v(ray, dd));
+	if (dd > 0.001 && distance3(aux, ccc) <= obj->params.x / 2)
+		return (dd);
+	else
 		return (-1);
-	if (dd[0] < 0)
-		dd[0] = dd[1];
-	if (dd[1] < 0)
-		dd[1] = dd[0];
-	if (dd[1] < dd[0])
-		dd[0] = dd[1];
-	return (dd[0]);
 }
 
 double	best_with_caps(t_v3 origin, t_v3 ray, t_objs *obj, double inter_body)
 {
 	double	dd[2];
-	t_v3	aux1;
-	t_v3	aux2;
+	double	caps;
+	t_v3	ccc;
+	t_v3	aux;
 
-	dd[0] = inter_plane(origin, ray, obj);
-	dd[1] = compute_plane(origin, ray, obj, dd);
-	aux1 = add_v(origin, scale_v(v_dup(ray), dd[0]));
-	aux2 = add_v(origin, scale_v(v_dup(ray), dd[1]));
-	if (dd[0] > 0.0001 && distance3(aux1, obj->coord) <= obj->params.y
-		&& dd[1] > 0.0001 && distance3(aux2, obj->coord) <= obj->params.y)
-		if (dd[1] < dd[0])
-			dd[0] = dd[1];
-	else if (dd[1] > 0.0001 && distance3(aux2, obj->coord) <= obj->params.y)
-		dd[0] = dd[1];
-	else if (dd[0] > 0.0001 && distance3(aux1, obj->coord) > obj->params.y
-		&& dd[1] > 0.0001 && distance3(aux2, obj->coord) > obj->params.y)
-		return (-1);
-	if (dd[0] > 0.0001 && dd[0] < inter_body)
-		return (dd[0]);
-	if (dd[1] > 0.0001 && dd[1] < inter_body)
-		return (dd[1]);
+	dd[0] = check_caps(origin, ray, obj, obj->coord);
+	ccc = add_v(obj->coord, (scale_v(obj->orient, obj->params.y)));
+	dd[1] = check_caps(origin, ray, obj, ccc);
+	caps = -1;
+	aux = add_v(origin, scale_v(ray, dd[1]));
+	
+	if (dd[0] > 0.001 && (dd[0] < dd[1] || dd[1] < 0.001))
+		caps = dd[0];
+	else if (dd[1] > 0.001 && (dd[1] < dd[0] || dd[0] < 0.001))
+		caps = dd[1];
+	if (0 > 0.001)
+	{
+		printf("Caps intersect at %f, choosing between %f and %f, while body at %f\n", 
+				caps, dd[0], dd[1], inter_body);
+		printf("\tCylinder height being %f and radius %f\n", obj->params.y, obj->params.x / 2);
+		printf(" (%f) ", distance3(aux, ccc));
+		printf("\t\tLower cap coordinates:[%.2f, %.2f, %.2f], Upper cap coordinates: [%.2f, %.2f, %.2f]\n\n",
+				obj->coord.x, obj->coord.y, obj->coord.z, ccc.x, ccc.y, ccc.z);
+	}
+	if (caps > 0.001 && (caps < inter_body || inter_body < 0.001))
+		return (caps);
 	return (inter_body);
 }
 
@@ -108,11 +127,9 @@ double	inter_cylinder(t_v3 origin, t_v3 ray, t_objs *obj)
 	t_v3	final_dist;
 
 	cy_calculs(origin, ray, obj, x);
-	aux2 = scale_v(v_dup(ray), x[0]);
-	aux = substract(aux2, substract(obj->coord, origin));
+	aux = substract(scale_v(ray, x[0]), substract(obj->coord, origin));
+	aux2 = substract(scale_v(ray, x[1]), substract(obj->coord, origin));
 	dist[0] = dot_product(obj->orient, aux);
-	aux2 = scale_v(v_dup(ray), x[1]);
-	aux = substract(aux2, substract(obj->coord, origin));
-	dist[1] = dot_product(obj->orient, aux);
+	dist[1] = dot_product(obj->orient, aux2);
 	return (best_with_caps(origin, ray, obj, best_body(dist, x, obj)));
 }

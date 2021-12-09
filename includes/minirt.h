@@ -14,8 +14,8 @@
 
 # define MINIRT_H
 # define BUFFER_SIZE 128
-# define WIDTH 400
-# define HEIGHT 400
+# define WIDTH 800
+# define HEIGHT 600
 # define ESC_KEY 65307
 # define INF 2147483647
 # define THANKS "Thank you, see you soon!\n"

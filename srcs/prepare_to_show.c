@@ -43,7 +43,7 @@ int	*find_pixel(t_v3 origin, t_v3 ray, t_scene *sc, t_mlx_show *the_show)
 			dist = inter_plane(origin, ray, iter);
 		else if (iter->type == 'c')
 			dist = inter_cylinder(origin, ray, iter);
-		if (dist > 0.0001 && dist < closest)
+		if (dist > 0.001 && dist < closest)
 		{
 			closest = dist;
 			intersected = iter;

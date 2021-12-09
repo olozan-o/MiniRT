@@ -28,9 +28,9 @@ double	inter_sphere(t_v3 origin, t_v3 ray, t_objs *obj)
 		return (-1);
 	inter_p[0] = (sqrt(closer) - k.y) / (2 * k.x);
 	inter_p[1] = (-sqrt(closer) - k.y) / (2 * k.x);
-	if (inter_p[0] > 0.0001 && inter_p[0] < inter_p[1])
+	if (inter_p[0] > 0.001 && inter_p[0] < inter_p[1])
 		closer = inter_p[0];
-	else if (inter_p[1] > 0.0001)
+	else if (inter_p[1] > 0.001)
 		closer = inter_p[1];
 	else
 		return (-1);
