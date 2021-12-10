@@ -69,5 +69,5 @@ int	file_error(int argc, char **argv)
 		i++;
 	if (argv[1][i - 3] != '.' || argv[1][i - 2] != 'r' || argv[1][i - 1] != 't')
 		return (1);
-	return(0);
+	return (0);
 }
