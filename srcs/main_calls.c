@@ -68,8 +68,8 @@ int	main(int argc, char **argv)
 	t_scene		*sc_now;
 	t_mlx_show	*the_show;
 
-	if (argc < 2 || argc > 3 || (argc == 3 && (ft_strcmp(argv[2], "-save"))))
-		exit_program("Error\nWrong number of arguments\n");
+	if (argc < 2 || argc > 3 || file_error(argc, argv))
+		exit_program("Error\nWrong Arguments\n-- Usage: ./miniRT *.rt\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		exit_program("Error\nCouln't read or find file\n");

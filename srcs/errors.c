@@ -57,3 +57,17 @@ int	object_error(t_objs *this)
 		return (1);
 	return (0);
 }
+
+int	file_error(int argc, char **argv)
+{
+	int	i;
+
+	i = 0;
+	if (argc < 2 || !argv[1])
+		return (1);
+	while (argv[1][i])
+		i++;
+	if (argv[1][i - 3] != '.' || argv[1][i - 2] != 'r' || argv[1][i - 1] != 't')
+		return (1);
+	return(0);
+}

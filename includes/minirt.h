@@ -87,6 +87,7 @@ int				check_all(t_scene *sc);
 int				exit_program(char *str);
 int				operate_key_press(int key);
 int				color_error(int *col);
+int				file_error(int argc, char ** argv);
 
 /*			STR FUNCTIONS				*/
 char			**ft_split(char const *s, char c);
