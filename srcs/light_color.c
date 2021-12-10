@@ -62,9 +62,22 @@ int	check_objects(t_v3 point, t_v3 light, t_objs *iter)
 	return (1);
 }
 
+int	*resolve_color(double check, t_v3 to_light, t_scene *sc, t_objs *itsd)
+{
+	int	*result;
+
+	if (check && dot_p(itsd->normal, to_light) >= 0)
+		check = vcos(itsd->normal, to_light);
+	else if (dot_p(itsd->normal, to_light) < 0)
+		check = 0;
+	result = combine_lights(sc->a_lum, sc->a_color,
+			sc->f_light->params.x * check, sc->f_light->color);
+	compute_color(result, itsd->color);
+	return (result);
+}
+
 int	*get_color(t_v3 origin, t_v3 ray, t_objs *itsd, t_scene *sc)
 {
-	int		*result;
 	t_objs	*iter;
 	t_v3	to_light;
 	double	check;
@@ -85,12 +98,5 @@ int	*get_color(t_v3 origin, t_v3 ray, t_objs *itsd, t_scene *sc)
 		if (check != 0)
 			iter = iter->next;
 	}
-	if (check && dot_p(itsd->normal, to_light) >= 0)
-		check = vcos(itsd->normal, to_light);
-	else if (dot_p(itsd->normal, to_light) < 0)
-		check = 0;
-	result = combine_lights(sc->a_lum, sc->a_color,
-			sc->f_light->params.x * check, sc->f_light->color);
-	compute_color(result, itsd->color);
-	return (result);
+	return (resolve_color(check, to_light, sc, itsd));
 }

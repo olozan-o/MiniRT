@@ -15,7 +15,7 @@
 # define MINIRT_H
 # define BUFFER_SIZE 128
 # define WIDTH 1280
-# define HEIGHT 720
+# define HEIGHT 1080
 # define ESC_KEY 65307
 # define INF 2147483647
 # define THANKS "Thank you, see you soon!\n"
@@ -82,7 +82,7 @@ t_v3			v_dup(t_v3 this);
 void			initialize_v3(t_v3 *this);
 
 /*		  	ERROR AND DEBUGGING			*/
-int 			object_error(t_objs *this);
+int				object_error(t_objs *this);
 int				check_all(t_scene *sc);
 int				exit_program(char *str);
 int				operate_key_press(int key);
@@ -114,9 +114,9 @@ double			inter_plane(t_v3 origin, t_v3 ray, t_objs *object);
 double			inter_cylinder(t_v3 origin, t_v3 ray, t_objs *object);
 t_v3			add_v(t_v3 one, t_v3 other);
 double			distance3(t_v3 one, t_v3 other);
-double			compute_plane(t_v3 origin, t_v3 ray, t_objs *obj, int procedure);
+double			compute_plane(t_v3 origin, t_v3 ray, t_objs *obj,
+					int procedure);
 double			vcos(t_v3 a, t_v3 b);
-
 
 /*			IMAGE FUNCTIONS				*/
 int				put_it_on(t_scene *scene_now, t_mlx_show *the_show);

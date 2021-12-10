@@ -73,18 +73,17 @@ int	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		exit_program("Error\nCouln't read or find file\n");
-	printf("\n\nBeginning... ");
+	ft_putstr_fd("\n\nParsing... ", 2);
 	file_str = read_everything(fd);
 	sc_now = make_a_scene();
-	printf("everything read.\nProcessing now...");
+	ft_putstr_fd("everything read.\nProcessing now...", 2);
 	process_everything(file_str, sc_now);
 	free(file_str);
-	printf(" all processed, going to check\n");
 	check_all(sc_now);
-	printf(" all checked, going to write\n");
+	ft_putstr_fd(" all processed, check OK\nDrawing for you...", 2);
 	the_show = rideau(sc_now);
 	put_it_on(sc_now, the_show);
-	printf("\nCurtain's up! \n\n");
+	ft_putstr_fd("\nCurtain's up! \n\n", 2);
 	if (argc == 2)
 		start_the_dance(the_show);
 	exit(0);

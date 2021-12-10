@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/12 21:02:37 by oscarlo           #+#    #+#             */
-/*   Updated: 2021/12/09 22:26:03 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/12/10 11:04:39 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ int	check_all(t_scene *sc)
 		|| distance3(sc->camera->or, aux) == 0
 		|| sc->camera->params.x < 0 || sc->camera->params.x > M_PI)
 		exit_program("Error\nCamera error\n");
-	normalize(sc->camera->or);
 	if (sc->f_light->params.x < 0 || sc->f_light->params.x > 1
 		|| color_error(sc->f_light->color))
 		exit_program("Error\nWrong focused light parmeters\n");

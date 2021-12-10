@@ -53,7 +53,7 @@ int	process_camera(t_scene *sc, char *begin)
 	this_obj->params.x = this_obj->params.x * M_PI / 180 / 2;
 	if (!it)
 		return (-41);
-	if (this_obj->or.x == 0 && this_obj->or.y == 0 && this_obj->or.x == 0)
+	if (this_obj->or.x == 0 && this_obj->or.y == 0 && this_obj->or.z == 0)
 		this_obj->or.z = 1;
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: olozano- <olozano-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 15:19:40 by olozano-          #+#    #+#             */
-/*   Updated: 2021/12/09 23:24:40 by olozano-         ###   ########.fr       */
+/*   Updated: 2021/12/10 10:40:04 by olozano-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,11 @@ double	best_with_caps(t_v3 origin, t_v3 ray, t_objs *obj, double it_b)
 		caps = dd[0];
 	else if (dd[1] > 0.001 && (dd[1] < dd[0] || dd[0] < 0.001))
 		caps = dd[1];
-//	if (caps < 0.001 && it_b < 0.001)
-//		return (-1);
+	if (caps < 0.001 && it_b < 0.001)
+		return (-1);
 	if (caps > 0.001 && (caps < it_b || it_b < 0.001))
 	{
 		obj->normal = v_dup(obj->or);
-		//if (caps == dd[0])
-		//	obj->normal = scale_v(obj->or, -1);
 		return (caps);
 	}
 	return (it_b);
@@ -114,9 +112,11 @@ double	inter_cylinder(t_v3 origin, t_v3 ray, t_objs *obj)
 	else if (body_it == x[1])
 		obj->normal = normalize(sub(add_v(origin, scale_v(ray, x[1])),
 					add_v(obj->coord, scale_v(obj->or, dist[1]))));
-	//return(body_it);
-	return (best_with_caps(origin, ray, obj, body_it));
+	return (body_it);
 }
 
-//	return (normalize(vsub(vsub(scal_x_vec(x, d),
-//			scal_x_vec(dist, lst->fig.cy.nv)), vsub(lst->fig.cy.c, o))));
+/*
+**
+** return (best_with_caps(origin, ray, obj, body_it));
+**
+*/
